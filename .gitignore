@@ -1,0 +1,6 @@
+/vendor/
+/.env
+/.idea/
+/*.log
+/uploads/*
+!uploads/.htaccess

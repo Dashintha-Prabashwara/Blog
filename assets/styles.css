@@ -1,0 +1,459 @@
+/* Minimal modern UI — black / white / gray palette */
+
+:root {
+  /* Colors */
+  --color-primary: #0A0A23;
+  --color-accent: #4A90E2;
+  --color-accent-light: #6BA4E7;
+  --color-bg: #F7F8FA;
+  --color-text: #2C2C2C;
+  --color-muted: #666666;
+  --color-border: #E5E7EB;
+  
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Space Grotesk', var(--font-sans);
+  
+  /* Layout & Spacing */
+  --container-max: 1200px;
+  --header-height: 70px;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 4rem;
+  
+  /* Effects */
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 12px 24px rgba(0,0,0,0.05);
+  --ease: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Base Styles */
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+/* Layout & Spacing */
+.container {
+  width: min(var(--container-max), 100% - 3rem);
+  margin-inline: auto;
+}
+
+/* Modern Navigation */
+.navbar {
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+  height: var(--header-height);
+  z-index: 100;
+}
+
+.navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.nav-menu {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.nav-link {
+  color: var(--color-text);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s var(--ease);
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transition: transform 0.3s var(--ease);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Layout Fundamentals */
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Typography */
+h1, h2, h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+/* Header */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+}
+
+/* Enhanced header */
+.header-inner {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Refined brand */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  transition: transform 0.3s var(--ease);
+}
+
+.brand:hover {
+  transform: translateY(-1px);
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #000, #333);
+  box-shadow: var(--shadow-sm);
+}
+
+.brand-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Modern navigation */
+.main-nav {
+  margin-left: auto;
+  gap: 1.5rem;
+}
+
+.main-nav a {
+  position: relative;
+  font-weight: 500;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background: currentColor;
+  transform: scaleX(0);
+  transition: transform 0.3s var(--ease);
+}
+
+.main-nav a:hover {
+  opacity: 1;
+  background: none;
+}
+
+.main-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Enhanced buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s var(--ease);
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-light);
+  transform: translateY(-1px);
+}
+
+/* Refined Hero */
+.hero {
+  padding: var(--spacing-lg) 0;
+  background: linear-gradient(to bottom right, var(--color-primary), #1a1a3a);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/Blog/assets/grid.svg') center/cover;
+  opacity: 0.1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 650px;
+  margin: 0 auto;
+  text-align: center;
+  animation: fadeUp 0.8s var(--ease) forwards;
+}
+
+/* Section Spacing */
+.section {
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+/* Modern Grid System */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--grid-gap);
+  padding: var(--spacing-md) 0;
+}
+
+.post-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s var(--ease);
+}
+
+.post-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.post-image {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.post-content {
+  padding: var(--spacing-md);
+}
+
+.post-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin: 0 0 var(--spacing-sm);
+}
+
+.post-meta {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+/* Tags */
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--overlay);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  background: var(--panel);
+  border: 2px solid transparent;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--text);
+  background: var(--bg);
+}
+
+/* Utilities */
+.row{ display:flex; gap:0.75rem; align-items:center; }
+.actions{ margin-top:0.75rem; display:flex; gap:0.5rem; align-items:center; }
+
+/* Footer */
+.site-footer{
+  margin-top:2rem;
+  padding:1rem 0;
+  color:var(--muted);
+  font-size:0.9rem;
+  text-align:center;
+  border-top:1px solid var(--border);
+}
+
+.footer {
+  background: white;
+  border-top: 1px solid var(--color-border);
+  padding: var(--spacing-lg) 0;
+  margin-top: var(--spacing-lg);
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  opacity: 0;
+  animation: fadeUp 0.8s var(--ease) forwards;
+}
+
+/* Dark mode toggle */
+.theme-toggle {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.theme-toggle:hover {
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  /* Layout */
+  .container {
+    padding: 0 var(--spacing-sm);
+  }
+
+  /* Typography */
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  
+  /* Grid adjustments */
+  .posts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Form elements */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea {
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+
+  /* Navigation */
+  .nav-desktop {
+    display: none;
+  }
+
+  .nav-mobile {
+    display: block;
+  }
+
+  /* Header */
+  .header-inner {
+    height: 60px;
+  }
+
+  /* Hero section */
+  .hero {
+    padding: var(--spacing-md) 0;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Tighter spacing */
+  :root {
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+  }
+
+  /* Single column layouts */
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+
+  /* Adjust font sizes */
+  .text-xl { font-size: 1.25rem; }
+  .text-2xl { font-size: 1.5rem; }
+
+  /* Stack buttons on mobile */
+  .btn-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
