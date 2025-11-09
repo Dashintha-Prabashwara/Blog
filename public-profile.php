@@ -15,7 +15,7 @@ if (!$profileUser) {
 }
 
 // Get user's posts
-$stmt = $pdo->prepare("SELECT * FROM blogPost WHERE user_id = ? ORDER BY created_at DESC");
+$stmt = $pdo->prepare("SELECT * FROM blogpost WHERE user_id = ? ORDER BY created_at DESC");
 $stmt->execute([$userId]);
 $posts = $stmt->fetchAll();
 ?>

@@ -9,7 +9,7 @@ if (!is_logged_in()) {
 $stmt = $pdo->prepare("
     SELECT p.*, 
            (SELECT COUNT(*) FROM post_like pl WHERE pl.post_id = p.id) as like_count
-    FROM blogPost p 
+    FROM blogpost p 
     WHERE p.user_id = ? 
     ORDER BY p.created_at DESC");
 $stmt->execute([$_SESSION['user_id']]);
@@ -40,7 +40,7 @@ $topPostStmt = $pdo->prepare("
            (SELECT COUNT(*) FROM comment c2 
             JOIN comment_dislike cd ON c2.id = cd.comment_id 
             WHERE c2.post_id = p.id) as dislike_count
-    FROM blogPost p 
+    FROM blogpost p 
     WHERE p.user_id = ? 
     ORDER BY (
         (SELECT COUNT(*) FROM post_like pl WHERE pl.post_id = p.id) + 

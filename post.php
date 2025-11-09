@@ -3,7 +3,7 @@ require_once 'includes/header.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 // Update query to include description
-$stmt = $pdo->prepare("SELECT p.*, u.username, u.profile_image, u.description FROM blogPost p JOIN user u ON p.user_id = u.id WHERE p.id = ?");
+$stmt = $pdo->prepare("SELECT p.*, u.username, u.profile_image, u.description FROM blogpost p JOIN user u ON p.user_id = u.id WHERE p.id = ?");
 $stmt->execute([$id]);
 $post = $stmt->fetch();
 

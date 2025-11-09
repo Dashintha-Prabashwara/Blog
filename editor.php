@@ -17,7 +17,7 @@ if (isset($_GET['draft_id'])) {
     $isDraft = true;
 } elseif (isset($_GET['id'])){
   $id = (int)$_GET['id'];
-  $stmt = $pdo->prepare('SELECT * FROM blogPost WHERE id = ?');
+  $stmt = $pdo->prepare('SELECT * FROM blogpost WHERE id = ?');
   $stmt->execute([$id]);
   $post = $stmt->fetch();
   if (!$post) { header('Location: /Blog/404.php'); exit; }

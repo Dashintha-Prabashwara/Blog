@@ -4,7 +4,7 @@ require __DIR__ . '/includes/header.php';
 
 // Get total users and posts count
 $totalUsers = $pdo->query("SELECT COUNT(*) FROM user")->fetchColumn();
-$totalPosts = $pdo->query("SELECT COUNT(*) FROM blogPost")->fetchColumn();
+$totalPosts = $pdo->query("SELECT COUNT(*) FROM blogpost")->fetchColumn();
 
 // Update the query to include topics
 // Update the featured post query to get most popular post
@@ -18,7 +18,7 @@ $featured = $pdo->query("
                JOIN comment_dislike cd ON c2.id = cd.comment_id 
                WHERE c2.post_id = p.id
            ) as dislike_count
-    FROM blogPost p 
+    FROM blogpost p 
     JOIN user u ON p.user_id = u.id 
     ORDER BY (
         (SELECT COUNT(*) FROM post_like pl WHERE pl.post_id = p.id) + 
@@ -109,7 +109,7 @@ $featured = $pdo->query("
                 SELECT topic, COUNT(*) as post_count
                 FROM (
                     SELECT TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(topics, ',', n.n), ',', -1)) as topic
-                    FROM blogPost t CROSS JOIN (
+                    FROM blogpost t CROSS JOIN (
                         SELECT a.N + b.N * 10 + 1 n
                         FROM (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4) a,
                              (SELECT 0 AS N UNION ALL SELECT 1) b
@@ -226,7 +226,7 @@ $featured = $pdo->query("
                 <h2 class="font-serif text-2xl mb-12 scroll-fade-up">Recent Stories</h2>
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     <?php
-                    $stmt = $pdo->prepare("SELECT p.*, u.username, u.profile_image FROM blogPost p JOIN user u ON p.user_id = u.id ORDER BY p.created_at DESC LIMIT 9");
+                    $stmt = $pdo->prepare("SELECT p.*, u.username, u.profile_image FROM blogpost p JOIN user u ON p.user_id = u.id ORDER BY p.created_at DESC LIMIT 9");
                     $stmt->execute();
                     while ($post = $stmt->fetch()): ?>
                         <article class="group scroll-fade-up">

@@ -10,7 +10,7 @@ $stmt = $pdo->query("
     SELECT DISTINCT TRIM(topic) as topic 
     FROM (
         SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(topics, ',', n.n), ',', -1) topic
-        FROM blogPost t CROSS JOIN (
+        FROM blogpost t CROSS JOIN (
             SELECT a.N + b.N * 10 + 1 n
             FROM (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a,
                  (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
@@ -30,7 +30,7 @@ $selectedTopic = isset($_GET['topic']) ? trim($_GET['topic']) : '';
 $stmt = $pdo->prepare("
     SELECT p.*, u.username, 
            (SELECT COUNT(*) FROM post_like pl WHERE pl.post_id = p.id) as like_count
-    FROM blogPost p 
+    FROM blogpost p 
     JOIN user u ON p.user_id = u.id 
     " . ($selectedTopic ? "WHERE p.topics LIKE ?" : "") . "
     ORDER BY p.created_at DESC 
@@ -43,7 +43,7 @@ $stmt->execute($params);
 $posts = $stmt->fetchAll();
 
 // Get total posts for pagination
-$total = $pdo->query("SELECT COUNT(*) FROM blogPost")->fetchColumn();
+$total = $pdo->query("SELECT COUNT(*) FROM blogpost")->fetchColumn();
 $totalPages = ceil($total / $perPage);
 ?>
 

@@ -36,7 +36,7 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 
 try {
     if ($id) {
-        $sql = "UPDATE blogPost SET title = ?, content = ?, topics = ?";
+        $sql = "UPDATE blogpost SET title = ?, content = ?, topics = ?";
         $params = [$title, $content, $topics];
         
         if ($image_url) {
@@ -51,7 +51,7 @@ try {
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
     } else {
-        $stmt = $pdo->prepare("INSERT INTO blogPost (user_id, title, content, topics, image_url) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO blogpost (user_id, title, content, topics, image_url) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$_SESSION['user_id'], $title, $content, $topics, $image_url]);
         $id = $pdo->lastInsertId();
     }

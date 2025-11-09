@@ -4,7 +4,7 @@ require_once 'includes/header.php';
 $query = isset($_GET['q']) ? trim($_GET['q']) : '';
 $stmt = $pdo->prepare("
     SELECT p.*, u.username 
-    FROM blogPost p 
+    FROM blogpost p 
     JOIN user u ON p.user_id = u.id 
     WHERE p.title LIKE ? OR p.content LIKE ?
     ORDER BY p.created_at DESC

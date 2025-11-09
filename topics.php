@@ -2,7 +2,7 @@
 require_once 'includes/header.php';
 
 // Get all topics and sort them
-$stmt = $pdo->query("SELECT DISTINCT topics FROM blogPost WHERE topics IS NOT NULL");
+$stmt = $pdo->query("SELECT DISTINCT topics FROM blogpost WHERE topics IS NOT NULL");
 $allTopics = [];
 while($row = $stmt->fetch()) {
     $topics = explode(',', $row['topics']);
@@ -30,7 +30,7 @@ if (!empty($selectedTopics)) {
     $stmt = $pdo->prepare("
         SELECT p.*, u.username, u.profile_image,
                (SELECT COUNT(*) FROM post_like pl WHERE pl.post_id = p.id) as like_count 
-        FROM blogPost p 
+        FROM blogpost p 
         JOIN user u ON p.user_id = u.id 
         WHERE topics LIKE {$placeholders}
         ORDER BY p.created_at DESC

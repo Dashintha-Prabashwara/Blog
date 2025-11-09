@@ -73,7 +73,7 @@ require_once 'includes/header.php';
             <div class="flex gap-6 text-charcoal/60">
                 <div>
                     <span class="block font-serif text-2xl text-charcoal">
-                        <?= $pdo->query("SELECT COUNT(*) FROM blogPost")->fetchColumn() ?>
+                        <?= $pdo->query("SELECT COUNT(*) FROM blogpost")->fetchColumn() ?>
                     </span>
                     <span>Stories Shared</span>
                 </div>

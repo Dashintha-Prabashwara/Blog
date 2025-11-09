@@ -1,8 +1,13 @@
 -- ============================================
 -- Code & Canvas Blog Database Schema
 -- ============================================
--- Description: Complete database schema for blog platform
--- Features: User management, posts, comments, likes, follows, notifications
+-- INSTRUCTIONS FOR BEGINNERS:
+-- 1. Open phpMyAdmin (http://localhost/phpmyadmin)
+-- 2. Click "New" to create a database
+-- 3. Name it: code_canvas
+-- 4. Click "Import" tab
+-- 5. Choose this file (create_tables.sql)
+-- 6. Click "Import" button at bottom
 -- ============================================
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -13,7 +18,7 @@ START TRANSACTION;
 -- 1. USER MANAGEMENT
 -- ============================================
 
--- Users table
+-- Users table - stores all registered users
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
@@ -199,10 +204,13 @@ CREATE INDEX `idx_notification_unread` ON `notification` (`user_id`, `read`, `cr
 COMMIT;
 
 -- ============================================
--- Setup Complete
+-- ✅ Setup Complete!
 -- ============================================
--- Next steps:
--- 1. Update database credentials in includes/db.php
--- 2. Run this file in phpMyAdmin or MySQL command line
--- 3. Access the application at http://localhost/Blog/
+-- If you see this message, the database was created successfully.
+-- 
+-- Next Steps:
+-- 1. Make sure you created a .env file from .env.example
+-- 2. Create an 'uploads' folder in your Blog directory
+-- 3. Visit http://localhost/Blog to see your site
+-- 4. Register a new account to get started
 -- ============================================

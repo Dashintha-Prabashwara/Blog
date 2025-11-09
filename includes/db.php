@@ -54,11 +54,20 @@ $options = [
 try {
     $pdo = new \PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    // Don't expose sensitive error details in production
+    // Beginner-friendly error message
+    $error_msg = "❌ <strong>Database Connection Failed</strong><br><br>";
+    
     if (($_ENV['APP_ENV'] ?? 'production') === 'development') {
-        die('Database connection failed: ' . $e->getMessage());
-    } else {
-        die('Database connection failed. Please contact the administrator.');
+        $error_msg .= "<strong>Error:</strong> " . $e->getMessage() . "<br><br>";
     }
+    
+    $error_msg .= "<strong>Common Solutions:</strong><br>";
+    $error_msg .= "1. ✓ Check if MySQL is running in XAMPP Control Panel<br>";
+    $error_msg .= "2. ✓ Verify database name in .env is: <code>code_canvas</code><br>";
+    $error_msg .= "3. ✓ Make sure you imported create_tables.sql in phpMyAdmin<br>";
+    $error_msg .= "4. ✓ If you set a MySQL password, add it to .env after DB_PASS=<br><br>";
+    $error_msg .= "<strong>Need help?</strong> Check the Troubleshooting section in README.md";
+    
+    die("<div style='font-family: Arial; max-width: 600px; margin: 50px auto; padding: 20px; border: 2px solid #e74c3c; background: #fadbd8; border-radius: 8px;'>" . $error_msg . "</div>");
 }
 ?>

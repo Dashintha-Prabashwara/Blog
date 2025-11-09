@@ -111,14 +111,14 @@ Unsure where to begin? Look for issues labeled:
 // Good
 function getUserPosts($userId) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT * FROM blogPost WHERE user_id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM blogpost WHERE user_id = ?");
     $stmt->execute([$userId]);
     return $stmt->fetchAll();
 }
 
 // Bad
 function gup($id) {
-    $q = "SELECT * FROM blogPost WHERE user_id = $id";
+    $q = "SELECT * FROM blogpost WHERE user_id = $id";
     return mysql_query($q);
 }
 ```
