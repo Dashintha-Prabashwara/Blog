@@ -64,19 +64,6 @@ $readTime = max(1, ceil($wordCount / 200));
                            class="font-semibold text-charcoal hover:text-accent transition-colors">
                             <?= htmlspecialchars($post['username']) ?>
                         </a>
-                        <?php if ((int)$post['user_id'] !== (int)($_SESSION['user_id'] ?? 0)): ?>
-                            <?php if (is_logged_in()): ?>
-                                <button onclick="toggleFollow(<?= (int)$post['user_id'] ?>, this)" 
-                                        class="px-3 py-0.5 text-xs font-medium border border-dark rounded-full hover:bg-dark hover:text-white transition-all">
-                                    <?= isFollowing($post['user_id']) ? 'Following' : 'Follow' ?>
-                                </button>
-                            <?php else: ?>
-                                <button onclick="showAuthPrompt()" 
-                                        class="px-3 py-0.5 text-xs font-medium border border-dark rounded-full hover:bg-dark hover:text-white transition-all">
-                                    Follow
-                                </button>
-                            <?php endif; ?>
-                        <?php endif; ?>
                     </div>
                     <div class="flex items-center gap-2 text-charcoal/60 text-xs mt-0.5">
                         <span class="flex items-center gap-1">
@@ -123,35 +110,7 @@ $readTime = max(1, ceil($wordCount / 200));
 
     <!-- Post Content Container -->
     <div class="prose prose-lg max-w-none text-charcoal/90 leading-relaxed font-sans mb-14">
-        <?php if (is_logged_in()): ?>
-            <div id="content" class="space-y-4"></div>
-        <?php else: ?>
-            <div class="relative">
-                <div class="relative max-h-[380px] overflow-hidden">
-                    <div id="preview" class="space-y-4"></div>
-                    <div class="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-cream via-cream/80 to-transparent pointer-events-none"></div>
-                </div>
-                
-                <!-- Sign in Prompt -->
-                <div class="mt-6 p-8 bg-white/90 backdrop-blur-md border border-taupe rounded-3xl text-center shadow-lg max-w-lg mx-auto">
-                    <span class="w-12 h-12 rounded-2xl bg-dark text-white flex items-center justify-center mx-auto mb-4 shadow-sm">
-                        <i data-lucide="lock" class="w-6 h-6"></i>
-                    </span>
-                    <h3 class="font-serif text-2xl font-bold mb-2 text-charcoal">Read the full story</h3>
-                    <p class="text-sm text-charcoal/70 mb-6">Join our community or sign in to read the complete article, comment, and engage with the author.</p>
-                    <div class="flex items-center justify-center gap-3">
-                        <a href="/Blog/login.php?return=<?= urlencode('/Blog/post.php?id=' . $post['id']) ?>" 
-                           class="px-5 py-2.5 bg-dark text-white rounded-xl text-sm font-medium hover:bg-charcoal transition-all shadow-sm">
-                            Sign In
-                        </a>
-                        <a href="/Blog/register.php?return=<?= urlencode('/Blog/post.php?id=' . $post['id']) ?>" 
-                           class="px-5 py-2.5 border border-dark rounded-xl text-sm font-medium text-dark hover:bg-dark hover:text-white transition-all">
-                            Create Account
-                        </a>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
+        <div id="content" class="space-y-4"></div>
     </div>
 
     <!-- Interaction Bar (Like & Stats) -->
@@ -195,20 +154,6 @@ $readTime = max(1, ceil($wordCount / 200));
                 </p>
             </div>
         </div>
-        
-        <?php if ((int)$post['user_id'] !== (int)($_SESSION['user_id'] ?? 0)): ?>
-            <?php if (is_logged_in()): ?>
-                <button onclick="toggleFollow(<?= (int)$post['user_id'] ?>, this)" 
-                        class="px-5 py-2.5 rounded-xl border border-dark bg-dark text-white hover:bg-charcoal text-xs font-semibold shadow-sm transition-all shrink-0">
-                    <?= isFollowing($post['user_id']) ? 'Following' : 'Follow Author' ?>
-                </button>
-            <?php else: ?>
-                <button onclick="showAuthPrompt()" 
-                        class="px-5 py-2.5 rounded-xl border border-dark bg-dark text-white hover:bg-charcoal text-xs font-semibold shadow-sm transition-all shrink-0">
-                    Follow Author
-                </button>
-            <?php endif; ?>
-        <?php endif; ?>
     </div>
 
     <!-- Comments Section -->
@@ -357,12 +302,7 @@ marked.setOptions({
 
 const postMarkdown = <?= json_encode($post['content']) ?>;
 
-<?php if (is_logged_in()): ?>
-    document.getElementById('content').innerHTML = marked.parse(postMarkdown);
-<?php else: ?>
-    const previewText = postMarkdown.substring(0, 320) + (postMarkdown.length > 320 ? '...' : '');
-    document.getElementById('preview').innerHTML = marked.parse(previewText);
-<?php endif; ?>
+document.getElementById('content').innerHTML = marked.parse(postMarkdown);
 
 async function toggleLike(postId) {
     try {
