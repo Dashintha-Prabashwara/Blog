@@ -104,6 +104,7 @@ function createNotification($userId, $type, $postId = null, $commentId = null) {
 
 function getNotifications($userId, $limit = 10) {
     global $pdo;
+    $limit = (int)$limit;
     $stmt = $pdo->prepare("
         SELECT n.*, 
                u.username, u.profile_image,
@@ -124,7 +125,9 @@ function getNotifications($userId, $limit = 10) {
         ORDER BY n.created_at DESC
         LIMIT ?
     ");
-    $stmt->execute([$userId, $limit]);
+    $stmt->bindValue(1, (int)$userId, PDO::PARAM_INT);
+    $stmt->bindValue(2, $limit, PDO::PARAM_INT);
+    $stmt->execute();
     return $stmt->fetchAll();
 }
 

@@ -39,17 +39,38 @@ loadEnv(__DIR__ . '/../.env');
 
 // Database configuration from environment variables
 $host = $_ENV['DB_HOST'] ?? '127.0.0.1';
-$db   = $_ENV['DB_NAME'] ?? 'code_canvas';
-$user = $_ENV['DB_USER'] ?? 'root';
-$pass = $_ENV['DB_PASS'] ?? '';
+$port = $_ENV['DB_PORT'] ?? '3306';
+$db   = $_ENV['DB_NAME'] ?? $_ENV['DB_DATABASE'] ?? 'code_canvas';
+$user = $_ENV['DB_USER'] ?? $_ENV['DB_USERNAME'] ?? 'root';
+$pass = $_ENV['DB_PASS'] ?? $_ENV['DB_PASSWORD'] ?? '';
 $charset = 'utf8mb4';
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+// 'sys' is a MySQL/TiDB reserved system schema that disallows user table creation.
+// If 'sys' was provided as the default connection database, fall back to 'code_canvas'.
+if ($db === 'sys') {
+    $db = 'code_canvas';
+}
+
+$dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
 $options = [
     \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
     \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
     \PDO::ATTR_EMULATE_PREPARES   => false,
 ];
+
+// Configure SSL for remote / cloud database hosts (e.g. TiDB Cloud)
+$sslCa = $_ENV['DB_SSL_CA'] ?? null;
+if (!$sslCa) {
+    if (file_exists(__DIR__ . '/cacert.pem')) {
+        $sslCa = __DIR__ . '/cacert.pem';
+    } elseif (file_exists('C:/xampp/apache/bin/curl-ca-bundle.crt')) {
+        $sslCa = 'C:/xampp/apache/bin/curl-ca-bundle.crt';
+    }
+}
+
+if ($sslCa && ($host !== '127.0.0.1' && $host !== 'localhost' || !empty($_ENV['DB_SSL_CA']))) {
+    $options[\PDO::MYSQL_ATTR_SSL_CA] = $sslCa;
+}
 
 try {
     $pdo = new \PDO($dsn, $user, $pass, $options);
