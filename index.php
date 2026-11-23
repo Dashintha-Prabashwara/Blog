@@ -1,345 +1,316 @@
 <?php
-require __DIR__ . '/includes/db.php';
-require __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/includes/db.php';
 
 // Get total users and posts count
-$totalUsers = $pdo->query("SELECT COUNT(*) FROM user")->fetchColumn();
-$totalPosts = $pdo->query("SELECT COUNT(*) FROM blogpost")->fetchColumn();
+$totalUsers = (int)$pdo->query("SELECT COUNT(*) FROM user")->fetchColumn();
+$totalPosts = (int)$pdo->query("SELECT COUNT(*) FROM blogpost")->fetchColumn();
 
-// Update the query to include topics
-// Update the featured post query to get most popular post
+// Get most popular/featured post
 $featured = $pdo->query("
     SELECT p.*, u.username, u.profile_image,
            (SELECT COUNT(*) FROM post_like pl WHERE pl.post_id = p.id) as like_count,
-           (SELECT COUNT(*) FROM comment c WHERE c.post_id = p.id) as comment_count,
-           (
-               SELECT COUNT(*) 
-               FROM comment c2 
-               JOIN comment_dislike cd ON c2.id = cd.comment_id 
-               WHERE c2.post_id = p.id
-           ) as dislike_count
+           (SELECT COUNT(*) FROM comment c WHERE c.post_id = p.id) as comment_count
     FROM blogpost p 
     JOIN user u ON p.user_id = u.id 
     ORDER BY (
-        (SELECT COUNT(*) FROM post_like pl WHERE pl.post_id = p.id) + 
-        (SELECT COUNT(*) FROM comment c WHERE c.post_id = p.id) - 
-        (
-            SELECT COALESCE(COUNT(*), 0)
-            FROM comment c2 
-            JOIN comment_dislike cd ON c2.id = cd.comment_id 
-            WHERE c2.post_id = p.id
-        )
+        (SELECT COUNT(*) FROM post_like pl WHERE pl.post_id = p.id) * 2 + 
+        (SELECT COUNT(*) FROM comment c WHERE c.post_id = p.id)
     ) DESC, p.created_at DESC
     LIMIT 1
 ")->fetch();
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Code & Canvas — Minimalist Blog</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 text-gray-900 font-sans">
-    <main class="max-w-7xl mx-auto py-8">
-        <!-- Enhanced Hero Section -->
-        <section class="relative bg-cream py-20 sm:py-32 rounded-3xl overflow-hidden mb-16">
-            <!-- Decorative elements -->
-            <div class="absolute inset-0 pointer-events-none">
-                <svg class="absolute right-0 top-0 h-full w-1/2 text-charcoal/5" viewBox="0 0 150 350">
-                    <pattern id="dots" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-                        <circle cx="2" cy="2" r="2" fill="currentColor"/>
-                    </pattern>
-                    <rect width="150" height="350" fill="url(#dots)"/>
-                </svg>
-            </div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="relative z-10 max-w-2xl">
-                    <span class="inline-block px-4 py-1 mb-6 text-sm font-medium bg-accent/10 text-accent rounded-full scroll-fade-up">
-                        Featured Platform for Developers & Designers
-                    </span>
-                    <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight tracking-tight text-balance mb-6 scroll-fade-up scroll-delay-1">
-                        Where Design Meets Digital Craft
-                    </h1>
-                    <p class="text-lg sm:text-xl text-charcoal/70 mb-8 text-balance max-w-xl scroll-fade-up scroll-delay-2">
-                        Join our community of creative developers and designers. Share your stories, 
-                        learn from others, and grow together.
-                    </p>
-                    
-                    <!-- Stats Row -->
-                    <div class="flex gap-8 mb-8 text-charcoal/80 scroll-fade-up scroll-delay-3">
-                        <div>
-                            <span class="block font-serif text-3xl">
-                                <?= number_format($totalUsers) ?>
-                            </span>
-                            <span class="text-sm">Community Members</span>
-                        </div>
-                        <div>
-                            <span class="block font-serif text-3xl">
-                                <?= number_format($totalPosts) ?>
-                            </span>
-                            <span class="text-sm">Published Stories</span>
-                        </div>
-                    </div>
 
-                    <div class="flex flex-wrap gap-4 scroll-fade-up scroll-delay-3">
-                        <a href="/Blog/posts.php" 
-                           class="inline-flex items-center px-6 py-3 rounded-lg bg-dark text-white hover:bg-charcoal transition-all">
-                            Explore Stories
-                        </a>
-                        <?php if (!isset($_SESSION['user_id'])): ?>
-                            <a href="/Blog/register.php" 
-                               class="inline-flex items-center px-6 py-3 rounded-lg border border-charcoal/20 hover:border-charcoal/40 transition-all">
-                                Join Community
-                            </a>
-                        <?php endif; ?>
-                    </div>
+$pageTitle = 'Code & Canvas — Where Design Meets Digital Craft';
+require_once __DIR__ . '/includes/header.php';
+?>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-cream via-white to-taupe/30 py-16 sm:py-24 rounded-3xl overflow-hidden border border-taupe/80 shadow-sm mb-16">
+        <div class="max-w-3xl mx-auto px-4 sm:px-8 text-center relative z-10">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 mb-6 text-xs font-semibold bg-accent/10 text-accent rounded-full">
+                <i data-lucide="feather" class="w-3.5 h-3.5"></i>
+                <span>A Mindful Platform for Creators &amp; Engineers</span>
+            </span>
+            
+            <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight font-bold tracking-tight text-charcoal mb-6 text-balance">
+                Where Design Meets Digital Craft
+            </h1>
+            
+            <p class="text-base sm:text-lg text-charcoal/70 mb-8 max-w-2xl mx-auto leading-relaxed">
+                A modern publishing space designed for developers, designers, and thinkers to share knowledge, explore typography, and document ideas.
+            </p>
+            
+            <!-- Stats Row -->
+            <div class="flex items-center justify-center gap-8 sm:gap-12 mb-8 py-4 border-y border-taupe/60 max-w-md mx-auto">
+                <div class="text-center">
+                    <span class="block font-serif text-3xl font-bold text-charcoal">
+                        <?= number_format($totalUsers) ?>
+                    </span>
+                    <span class="text-xs text-charcoal/60 uppercase tracking-wider font-medium">Members</span>
+                </div>
+                <div class="h-8 w-px bg-taupe"></div>
+                <div class="text-center">
+                    <span class="block font-serif text-3xl font-bold text-charcoal">
+                        <?= number_format($totalPosts) ?>
+                    </span>
+                    <span class="text-xs text-charcoal/60 uppercase tracking-wider font-medium">Stories</span>
                 </div>
             </div>
-        </section>
 
-        <!-- Featured Categories -->
-        <section class="mb-16 px-4 sm:px-6 lg:px-8">
-            <h2 class="font-serif text-2xl mb-8 scroll-fade-up">Popular Topics</h2>
-            <?php
-            // Get popular topics based on post count
-            $topicsStmt = $pdo->query("
-                SELECT topic, COUNT(*) as post_count
-                FROM (
-                    SELECT TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(topics, ',', n.n), ',', -1)) as topic
-                    FROM blogpost t CROSS JOIN (
-                        SELECT a.N + b.N * 10 + 1 n
-                        FROM (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4) a,
-                             (SELECT 0 AS N UNION ALL SELECT 1) b
-                        ORDER BY n
-                    ) n
-                    WHERE n.n <= 1 + (LENGTH(topics) - LENGTH(REPLACE(topics, ',', '')))
-                ) temp
-                WHERE topic != ''
-                GROUP BY topic
-                ORDER BY post_count DESC
-                LIMIT 4
-            ");
-            $popularTopics = $topicsStmt->fetchAll(PDO::FETCH_ASSOC);
-            ?>
-            <div id="popularTopics" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <?php foreach($popularTopics as $index => $topic): ?>
-                    <a href="/Blog/posts.php?topic=<?= urlencode($topic['topic']) ?>" 
-                       class="p-6 bg-white rounded-xl hover:shadow-lg transition-all group scroll-fade-up scroll-delay-<?= $index + 1 ?>">
-                        <svg class="w-8 h-8 text-accent mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<?= $iconPath ?>"/>
-                        </svg>
-                        <div>
-                            <h3 class="font-medium group-hover:text-accent transition-colors"><?= htmlspecialchars($topic['topic']) ?></h3>
-                            <p class="text-sm text-charcoal/60"><?= $topic['post_count'] ?> posts</p>
-                        </div>
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <a href="/Blog/posts.php" 
+                   class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-dark text-white hover:bg-charcoal transition-all text-sm font-medium shadow-sm">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    <span>Explore Stories</span>
+                </a>
+                <?php if (!isset($_SESSION['user_id'])): ?>
+                    <a href="/Blog/register.php" 
+                       class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-charcoal/30 hover:border-charcoal bg-white/70 hover:bg-white text-charcoal transition-all text-sm font-medium">
+                        <i data-lucide="user-plus" class="w-4 h-4"></i>
+                        <span>Join Community</span>
                     </a>
-                <?php endforeach; ?>
-            </div>
-        </section>
-
-        <!-- Featured Post Section -->
-        <section class="py-16 sm:py-24">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <?php if ($featured): ?>
-                    <!-- Add Featured Story label -->
-                    <div class="flex items-center gap-4 mb-8">
-                        <h2 class="font-serif text-2xl">Featured Story</h2>
-                        <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm">Editor's Pick</span>
-                    </div>
-                    
-                    <a href="/Blog/post.php?id=<?= $featured['id'] ?>"
-                       class="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
-                        <div class="grid md:grid-cols-2 gap-8 p-8">
-                            <div class="aspect-[4/3] rounded-xl overflow-hidden">
-                            <?php if ($featured['image_url']): ?>
-                            <img src="<?= htmlspecialchars($featured['image_url']) ?>" 
-                                 alt="<?= htmlspecialchars($featured['title']) ?>"
-                                 class="w-full h-full object-cover image-fade-in"
-                                 loading="lazy"
-                                 onload="this.classList.add('loaded')">
-                            <?php else: ?>
-                            <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                                <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14">
-                                </svg>
-                            </div>
-                            <?php endif; ?>
-                            </div>
-                            <div class="flex flex-col justify-center">
-                                <!-- Add Featured tag at the top -->
-                                <div class="flex gap-3 mb-6">
-                                    <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm">Featured Story</span>
-                                    <?php if ($featured['topics']): ?>
-                                        <?php 
-                                        $topicsArray = explode(',', $featured['topics']);
-                                        foreach($topicsArray as $topic): 
-                                            if(trim($topic)):
-                                        ?>
-                                            <span class="px-3 py-1 bg-cream rounded-full text-sm text-charcoal/70">
-                                                <?= htmlspecialchars(trim($topic)) ?>
-                                            </span>
-                                        <?php 
-                                            endif;
-                                        endforeach; 
-                                        ?>
-                                    <?php endif; ?>
-                                </div>
-                                <h2 class="font-serif text-2xl sm:text-3xl mb-4">
-                                    <?= htmlspecialchars($featured['title']) ?>
-                                </h2>
-                                <p class="text-charcoal/70 mb-6 line-clamp-3">
-                                    <?= htmlspecialchars(substr($featured['content'], 0, 200)) ?>...
-                                </p>
-                                <div class="flex items-center gap-4 text-sm text-charcoal/60">
-                                    <div class="flex items-center gap-2">
-                                        <?php
-                                        $authorStmt = $pdo->prepare("SELECT profile_image FROM user WHERE id = ?");
-                                        $authorStmt->execute([$featured['user_id']]);
-                                        $author = $authorStmt->fetch();
-                                        ?>
-                                        <img src="<?= $author['profile_image'] ?? '/Blog/assets/images/default-avatar.png' ?>" 
-                                             alt="<?= htmlspecialchars($featured['username']) ?>"
-                                             class="w-8 h-8 rounded-full object-cover">
-                                        <span><?= htmlspecialchars($featured['username']) ?></span>
-                                    </div>
-                                    <time><?= date('M j, Y', strtotime($featured['created_at'])) ?></time>
-                                    <span>5 min read</span>
-                                    <!-- Add like count -->
-                                    <div class="flex items-center gap-1">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <?php else: ?>
+                    <a href="/Blog/editor.php" 
+                       class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-charcoal/30 hover:border-charcoal bg-white/70 hover:bg-white text-charcoal transition-all text-sm font-medium">
+                        <i data-lucide="pen-tool" class="w-4 h-4"></i>
+                        <span>Write a Story</span>
                     </a>
                 <?php endif; ?>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Recent Posts Grid -->
-        <section class="pb-32">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="font-serif text-2xl mb-12 scroll-fade-up">Recent Stories</h2>
-                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <?php
-                    $stmt = $pdo->prepare("SELECT p.*, u.username, u.profile_image FROM blogpost p JOIN user u ON p.user_id = u.id ORDER BY p.created_at DESC LIMIT 9");
-                    $stmt->execute();
-                    while ($post = $stmt->fetch()): ?>
-                        <article class="group scroll-fade-up">
-                            <a href="/Blog/post.php?id=<?= $post['id'] ?>" 
-                               class="block bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
-                                <div class="aspect-[4/3] relative overflow-hidden">
-                                    <?php if ($post['image_url']): ?>
-                                        <img src="<?= htmlspecialchars($post['image_url']) ?>" 
-                                             alt="<?= htmlspecialchars($post['title']) ?>"
-                                             class="w-full h-[250px] object-cover"
-                                             loading="lazy">
-                                    <?php else: ?>
-                                        <div class="w-full h-[250px] bg-gray-100 flex items-center justify-center">
-                                            <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                                            </svg>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="p-6">
-                                    <?php if ($post['id'] === $featured['id']): ?>
-                                        <span class="inline-block px-3 py-1 bg-accent/10 text-accent rounded-full text-sm mb-3">Featured Story</span>
-                                    <?php endif; ?>
-                                    <h3 class="font-serif text-xl mb-3"><?= htmlspecialchars($post['title']) ?></h3>
-                                    <p class="text-charcoal/70 mb-4 line-clamp-2">
-                                        <?= htmlspecialchars(substr($post['content'], 0, 150)) ?>...
-                                    </p>
-                                    <div class="flex items-center gap-3 text-sm text-charcoal/60">
-                                        <div class="flex items-center gap-2">
-                                            <img src="<?= $post['profile_image'] ?? '/Blog/assets/images/default-avatar.png' ?>" 
-                                                 alt="<?= htmlspecialchars($post['username']) ?>"
-                                                 class="w-6 h-6 rounded-full object-cover">
-                                            <span><?= htmlspecialchars($post['username']) ?></span>
-                                        </div>
-                                        <time><?= date('M j, Y', strtotime($post['created_at'])) ?></time>
-                                        <!-- Add like count -->
-                                        <div class="flex items-center gap-1">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                            </svg>
-                                            <span><?= $post['like_count'] ?></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </article>
-                    <?php endwhile; ?>
+    <!-- Popular Topics -->
+    <section class="mb-16">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-2.5">
+                <span class="w-8 h-8 rounded-lg bg-accent/10 text-accent flex items-center justify-center">
+                    <i data-lucide="tag" class="w-4 h-4"></i>
+                </span>
+                <h2 class="font-serif text-2xl font-bold text-charcoal">Popular Topics</h2>
+            </div>
+            <a href="/Blog/topics.php" class="text-sm font-medium text-accent hover:underline flex items-center gap-1">
+                <span>Browse all</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+        </div>
+        
+        <?php
+        // Fetch distinct topics with counts
+        $topicCounts = [];
+        $topicRows = $pdo->query("SELECT topics FROM blogpost WHERE topics IS NOT NULL AND topics != ''")->fetchAll(PDO::FETCH_COLUMN);
+        foreach ($topicRows as $row) {
+            $parts = explode(',', $row);
+            foreach ($parts as $p) {
+                $p = trim($p);
+                if (!empty($p)) {
+                    $topicCounts[$p] = ($topicCounts[$p] ?? 0) + 1;
+                }
+            }
+        }
+        arsort($topicCounts);
+        $topTopics = array_slice($topicCounts, 0, 4, true);
+        if (empty($topTopics)) {
+            $topTopics = ['Design' => 0, 'Development' => 0, 'Tutorial' => 0, 'Technology' => 0];
+        }
+        ?>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <?php foreach($topTopics as $topicName => $count): ?>
+                <a href="/Blog/posts.php?topic=<?= urlencode($topicName) ?>" 
+                   class="p-5 bg-white rounded-2xl border border-taupe hover:border-dark hover:shadow-md transition-all group flex flex-col justify-between">
+                    <div class="w-10 h-10 rounded-xl bg-cream flex items-center justify-center text-charcoal/70 group-hover:bg-dark group-hover:text-white transition-colors mb-4">
+                        <i data-lucide="hash" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-serif font-bold text-lg text-charcoal group-hover:text-accent transition-colors"><?= htmlspecialchars($topicName) ?></h3>
+                        <p class="text-xs text-charcoal/60 mt-1"><?= $count ?> <?= $count === 1 ? 'story' : 'stories' ?></p>
+                    </div>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </section>
+
+    <!-- Featured Post Section -->
+    <?php if ($featured): ?>
+    <section class="mb-16">
+        <div class="flex items-center gap-3 mb-8">
+            <span class="w-8 h-8 rounded-lg bg-accent/10 text-accent flex items-center justify-center">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+            </span>
+            <h2 class="font-serif text-2xl font-bold text-charcoal">Featured Story</h2>
+        </div>
+        
+        <a href="/Blog/post.php?id=<?= $featured['id'] ?>"
+           class="group block bg-white rounded-3xl overflow-hidden border border-taupe shadow-sm hover:shadow-xl transition-all duration-300">
+            <div class="grid md:grid-cols-2 gap-8 p-6 sm:p-10 items-center">
+                <div class="aspect-[16/10] rounded-2xl overflow-hidden bg-taupe relative">
+                    <?php if (!empty($featured['image_url'])): ?>
+                        <img src="<?= htmlspecialchars($featured['image_url']) ?>" 
+                             alt="<?= htmlspecialchars($featured['title']) ?>"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <?php else: ?>
+                        <div class="w-full h-full bg-cream flex items-center justify-center text-charcoal/30">
+                            <i data-lucide="image" class="w-16 h-16"></i>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="flex flex-col justify-center space-y-4">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-accent/10 text-accent rounded-full text-xs font-semibold">
+                            <i data-lucide="star" class="w-3 h-3"></i>
+                            Featured
+                        </span>
+                        <?php if (!empty($featured['topics'])): ?>
+                            <?php foreach(explode(',', $featured['topics']) as $t): if(trim($t)): ?>
+                                <span class="px-2.5 py-0.5 bg-cream rounded-full text-xs font-medium text-charcoal/70 border border-taupe">
+                                    <?= htmlspecialchars(trim($t)) ?>
+                                </span>
+                            <?php endif; endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+
+                    <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-charcoal group-hover:text-accent transition-colors leading-tight">
+                        <?= htmlspecialchars($featured['title']) ?>
+                    </h2>
+
+                    <p class="text-charcoal/70 text-sm sm:text-base line-clamp-3 leading-relaxed">
+                        <?= htmlspecialchars(substr(strip_tags($featured['content']), 0, 220)) ?>...
+                    </p>
+
+                    <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-taupe text-xs text-charcoal/60">
+                        <div class="flex items-center gap-2.5">
+                            <img src="<?= $featured['profile_image'] ?? '/Blog/assets/images/default-avatar.png' ?>" 
+                                 alt="<?= htmlspecialchars($featured['username']) ?>"
+                                 class="w-7 h-7 rounded-full object-cover border border-taupe">
+                            <span class="font-medium text-charcoal"><?= htmlspecialchars($featured['username']) ?></span>
+                            <span>•</span>
+                            <time><?= date('M j, Y', strtotime($featured['created_at'])) ?></time>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                            <span class="flex items-center gap-1">
+                                <i data-lucide="heart" class="w-3.5 h-3.5 text-accent"></i>
+                                <?= (int)$featured['like_count'] ?>
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <i data-lucide="message-square" class="w-3.5 h-3.5 text-charcoal/50"></i>
+                                <?= (int)$featured['comment_count'] ?>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
-    </main>
-    <?php require __DIR__ . '/includes/footer.php'; ?>
-</body>
-</html>
+        </a>
+    </section>
+    <?php endif; ?>
 
-<!-- Add scroll animation script before closing body tag -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-    };
+    <!-- Recent Stories Grid -->
+    <section class="pb-16">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-2.5">
+                <span class="w-8 h-8 rounded-lg bg-accent/10 text-accent flex items-center justify-center">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                </span>
+                <h2 class="font-serif text-2xl font-bold text-charcoal">Recent Stories</h2>
+            </div>
+            <a href="/Blog/posts.php" class="text-sm font-medium text-accent hover:underline flex items-center gap-1">
+                <span>View all stories</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+        </div>
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target); // Stop observing once visible
-            }
-        });
-    }, observerOptions);
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <?php
+            $stmt = $pdo->prepare("
+                SELECT p.*, u.username, u.profile_image,
+                       (SELECT COUNT(*) FROM post_like pl WHERE pl.post_id = p.id) as like_count,
+                       (SELECT COUNT(*) FROM comment c WHERE c.post_id = p.id) as comment_count
+                FROM blogpost p 
+                JOIN user u ON p.user_id = u.id 
+                ORDER BY p.created_at DESC 
+                LIMIT 9
+            ");
+            $stmt->execute();
+            $posts = $stmt->fetchAll();
+            ?>
 
-    // Observe all elements with scroll animation classes
-    document.querySelectorAll('.scroll-fade-up, .scroll-fade-in').forEach(el => {
-        observer.observe(el);
-    });
-});
-</script>
+            <?php if (empty($posts)): ?>
+                <div class="col-span-full bg-white rounded-3xl p-12 text-center border border-taupe">
+                    <div class="w-14 h-14 rounded-2xl bg-cream flex items-center justify-center mx-auto text-charcoal/40 mb-4">
+                        <i data-lucide="inbox" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="font-serif text-xl font-bold text-charcoal mb-2">No stories published yet</h3>
+                    <p class="text-sm text-charcoal/60 max-w-sm mx-auto mb-6">Be the first to share your insights, tutorials, or perspectives with the community.</p>
+                    <a href="/Blog/editor.php" class="inline-flex items-center gap-2 px-5 py-2.5 bg-dark text-white rounded-xl text-sm font-medium hover:bg-charcoal transition-all shadow-sm">
+                        <i data-lucide="pen-tool" class="w-4 h-4"></i>
+                        <span>Write First Story</span>
+                    </a>
+                </div>
+            <?php else: ?>
+                <?php foreach ($posts as $p): ?>
+                    <article class="group bg-white rounded-2xl overflow-hidden border border-taupe shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
+                        <a href="/Blog/post.php?id=<?= $p['id'] ?>" class="block">
+                            <div class="aspect-[16/10] bg-taupe relative overflow-hidden">
+                                <?php if (!empty($p['image_url'])): ?>
+                                    <img src="<?= htmlspecialchars($p['image_url']) ?>" 
+                                         alt="<?= htmlspecialchars($p['title']) ?>"
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <?php else: ?>
+                                    <div class="w-full h-full bg-cream flex items-center justify-center text-charcoal/30">
+                                        <i data-lucide="feather" class="w-10 h-10"></i>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <div class="p-6">
+                                <?php if (!empty($p['topics'])): ?>
+                                    <div class="flex flex-wrap gap-1.5 mb-3">
+                                        <?php 
+                                        $topicsList = array_slice(explode(',', $p['topics']), 0, 2);
+                                        foreach($topicsList as $t): if(trim($t)): ?>
+                                            <span class="px-2 py-0.5 bg-cream rounded-md text-[11px] font-medium text-charcoal/70 border border-taupe">
+                                                <?= htmlspecialchars(trim($t)) ?>
+                                            </span>
+                                        <?php endif; endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
 
-<!-- Add counter animation script before closing body tag -->
-<script>
-function animateCounters() {
-    const counters = document.querySelectorAll('.animate-counter');
-    const speed = 1000; // Increased duration for smoother animation
-    
-    counters.forEach(counter => {
-        const target = parseInt(counter.getAttribute('data-target'));
-        let current = parseInt(counter.getAttribute('data-current'));
-        
-        const increment = target / speed;
-        
-        if (current < target) {
-            current += increment;
-            if (current > target) current = target;
-            counter.setAttribute('data-current', current);
-            counter.textContent = Math.floor(current).toLocaleString();
-            requestAnimationFrame(() => animateCounters());
-        }
-    });
-}
+                                <h3 class="font-serif text-xl font-bold text-charcoal group-hover:text-accent transition-colors line-clamp-2 mb-2 leading-snug">
+                                    <?= htmlspecialchars($p['title']) ?>
+                                </h3>
+                                
+                                <p class="text-charcoal/70 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-4">
+                                    <?= htmlspecialchars(substr(strip_tags($p['content']), 0, 140)) ?>...
+                                </p>
+                            </div>
+                        </a>
 
-// Start animation when elements are in view
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            animateCounters();
-            observer.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.5 });
+                        <div class="px-6 pb-6 pt-0 border-t border-taupe/40 mt-auto flex items-center justify-between text-xs text-charcoal/60">
+                            <div class="flex items-center gap-2">
+                                <img src="<?= $p['profile_image'] ?? '/Blog/assets/images/default-avatar.png' ?>" 
+                                     alt="<?= htmlspecialchars($p['username']) ?>"
+                                     class="w-6 h-6 rounded-full object-cover border border-taupe">
+                                <span class="font-medium text-charcoal"><?= htmlspecialchars($p['username']) ?></span>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <span class="flex items-center gap-1">
+                                    <i data-lucide="heart" class="w-3.5 h-3.5 text-accent"></i>
+                                    <?= (int)$p['like_count'] ?>
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <i data-lucide="message-square" class="w-3.5 h-3.5 text-charcoal/50"></i>
+                                    <?= (int)$p['comment_count'] ?>
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </section>
+</div>
 
-document.querySelectorAll('.animate-counter').forEach(counter => {
-    observer.observe(counter);
-});
-</script>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>

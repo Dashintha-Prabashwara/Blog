@@ -48,10 +48,14 @@ if (is_logged_in()) {
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/Blog/assets/images/favicon.png">
     
-    <title>Code & Canvas</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/Blog/assets/css/main.css">
     <script>
         tailwind.config = {
@@ -74,65 +78,114 @@ if (is_logged_in()) {
         }
     </script>
 </head>
-<body class="bg-cream text-charcoal" x-data="{ mobileMenuOpen: false }">
-    <header class="fixed w-full z-50 bg-cream border-b border-taupe">
-        <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8"> <!-- Reduced padding on mobile -->
-            <nav class="flex items-center justify-between h-16 sm:h-20"> <!-- Reduced height on mobile -->
+<body class="bg-cream text-charcoal min-h-screen flex flex-col justify-between" x-data="{ mobileMenuOpen: false }">
+    <header class="fixed top-0 left-0 w-full z-50 bg-cream/95 backdrop-blur-md border-b border-taupe">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex items-center justify-between h-16 sm:h-20">
                 <!-- Logo -->
-                <a href="/Blog/" class="flex items-center">
-                    <span class="font-serif text-lg sm:text-2xl">Code & Canvas</span> <!-- Smaller text on mobile -->
+                <a href="/Blog/" class="flex items-center gap-2 group">
+                    <span class="w-9 h-9 rounded-xl bg-dark text-white flex items-center justify-center group-hover:bg-accent transition-colors shadow-sm">
+                        <i data-lucide="feather" class="w-5 h-5"></i>
+                    </span>
+                    <span class="font-serif text-xl sm:text-2xl tracking-tight">Code &amp; Canvas</span>
                 </a>
 
+                <!-- Desktop Search -->
+                <div class="hidden lg:block w-72">
+                    <form action="/Blog/search.php" method="GET">
+                        <div class="relative">
+                            <i data-lucide="search" class="w-4 h-4 text-charcoal/40 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                            <input type="search" name="q" placeholder="Search stories..." 
+                                   class="w-full pl-10 pr-4 py-2 text-sm bg-white/70 border border-taupe rounded-full focus:outline-none focus:ring-2 focus:ring-accent/50 focus:bg-white transition-all">
+                        </div>
+                    </form>
+                </div>
+
                 <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="/Blog/posts.php" class="text-charcoal/80 hover:text-charcoal transition-colors">Stories</a>
-                    <a href="/Blog/topics.php" class="text-charcoal/80 hover:text-charcoal transition-colors">Topics</a>
+                <div class="hidden md:flex items-center space-x-7">
+                    <a href="/Blog/posts.php" class="text-charcoal/80 hover:text-charcoal transition-colors flex items-center gap-1.5 text-sm font-medium">
+                        <i data-lucide="book-open" class="w-4 h-4 text-charcoal/60"></i>
+                        <span>Stories</span>
+                    </a>
+                    <a href="/Blog/topics.php" class="text-charcoal/80 hover:text-charcoal transition-colors flex items-center gap-1.5 text-sm font-medium">
+                        <i data-lucide="tag" class="w-4 h-4 text-charcoal/60"></i>
+                        <span>Topics</span>
+                    </a>
                     <?php if (is_logged_in()): ?>
-                        <a href="/Blog/dashboard.php" class="text-charcoal/80 hover:text-charcoal transition-colors">Dashboard</a>
-                        <a href="/Blog/editor.php" class="px-5 py-2 bg-dark text-white rounded-lg hover:bg-charcoal transition-all">Write</a>
+                        <a href="/Blog/dashboard.php" class="text-charcoal/80 hover:text-charcoal transition-colors flex items-center gap-1.5 text-sm font-medium">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4 text-charcoal/60"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="/Blog/editor.php" class="inline-flex items-center gap-2 px-4 py-2 bg-dark text-white rounded-lg hover:bg-charcoal transition-all text-sm font-medium shadow-sm">
+                            <i data-lucide="pen-tool" class="w-4 h-4"></i>
+                            <span>Write</span>
+                        </a>
                         <!-- Profile Dropdown -->
                         <div class="relative" x-data="{ open: false }">
-                            <a href="/Blog/account-settings.php" 
-                               class="flex items-center space-x-2" 
-                               @mouseenter="open = true">
-                                <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-100">
+                            <button @click="open = !open" 
+                                    @click.away="open = false"
+                                    class="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-taupe transition-all">
+                                <div class="w-9 h-9 rounded-full overflow-hidden bg-taupe border border-taupe">
                                     <img src="<?= $user['profile_image'] ?? '/Blog/assets/images/default-avatar.png' ?>" 
                                          alt="<?= htmlspecialchars($_SESSION['username']) ?>"
                                          class="w-full h-full object-cover">
                                 </div>
-                                <span class="text-sm"><?= htmlspecialchars($_SESSION['username']) ?></span>
-                            </a>
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-charcoal/60"></i>
+                            </button>
                             
                             <div x-show="open" 
-                                 @mouseleave="open = false"
                                  x-transition:enter="transition ease-out duration-100"
                                  x-transition:enter-start="transform opacity-0 scale-95"
                                  x-transition:enter-end="transform opacity-100 scale-100"
                                  x-transition:leave="transition ease-in duration-75"
                                  x-transition:leave-start="transform opacity-100 scale-100"
                                  x-transition:leave-end="transform opacity-0 scale-95"
-                                 class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50"
+                                 class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 divide-y divide-gray-100"
                                  style="display: none;">
-                                <a href="/Blog/account-settings.php" class="block px-4 py-2 hover:bg-gray-100">Account Settings</a>
-                                <a href="/Blog/profile-settings.php" class="block px-4 py-2 hover:bg-gray-100">Profile Settings</a>
-                                <a href="/Blog/security-settings.php" class="block px-4 py-2 hover:bg-gray-100">Security Settings</a>
-                                <hr class="my-2">
-                                <a href="/Blog/logout.php" class="block px-4 py-2 text-red-600 hover:bg-gray-100">Logout</a>
+                                <div class="px-4 py-2">
+                                    <p class="text-xs text-charcoal/50">Signed in as</p>
+                                    <p class="text-sm font-semibold truncate"><?= htmlspecialchars($_SESSION['username']) ?></p>
+                                </div>
+                                <div class="py-1">
+                                    <a href="/Blog/dashboard.php" class="flex items-center gap-2.5 px-4 py-2 text-sm text-charcoal/80 hover:bg-cream hover:text-charcoal transition-colors">
+                                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                                        <span>Dashboard</span>
+                                    </a>
+                                    <a href="/Blog/account-settings.php" class="flex items-center gap-2.5 px-4 py-2 text-sm text-charcoal/80 hover:bg-cream hover:text-charcoal transition-colors">
+                                        <i data-lucide="user" class="w-4 h-4"></i>
+                                        <span>Account Settings</span>
+                                    </a>
+                                    <a href="/Blog/profile-settings.php" class="flex items-center gap-2.5 px-4 py-2 text-sm text-charcoal/80 hover:bg-cream hover:text-charcoal transition-colors">
+                                        <i data-lucide="image" class="w-4 h-4"></i>
+                                        <span>Profile Settings</span>
+                                    </a>
+                                    <a href="/Blog/security-settings.php" class="flex items-center gap-2.5 px-4 py-2 text-sm text-charcoal/80 hover:bg-cream hover:text-charcoal transition-colors">
+                                        <i data-lucide="shield" class="w-4 h-4"></i>
+                                        <span>Security Settings</span>
+                                    </a>
+                                </div>
+                                <div class="py-1">
+                                    <a href="/Blog/logout.php" class="flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     <?php else: ?>
-                        <a href="/Blog/login.php" class="text-charcoal/80 hover:text-charcoal transition-colors">Sign in</a>
-                        <a href="/Blog/register.php" class="px-5 py-2 bg-dark text-white rounded-lg hover:bg-charcoal transition-all">Register</a>
+                        <a href="/Blog/login.php" class="text-charcoal/80 hover:text-charcoal transition-colors text-sm font-medium">Sign in</a>
+                        <a href="/Blog/register.php" class="inline-flex items-center gap-2 px-5 py-2 bg-dark text-white rounded-lg hover:bg-charcoal transition-all text-sm font-medium shadow-sm">
+                            <i data-lucide="user-plus" class="w-4 h-4"></i>
+                            <span>Register</span>
+                        </a>
                     <?php endif; ?>
                 </div>
 
                 <!-- Mobile menu button -->
                 <button type="button" 
                         @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="md:hidden inline-flex items-center justify-center p-2 rounded-lg hover:bg-white/50">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
+                        class="md:hidden inline-flex items-center justify-center p-2 rounded-lg hover:bg-taupe/40 text-charcoal">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
             </nav>
         </div>
@@ -150,7 +203,7 @@ if (is_logged_in()) {
              style="display: none;">
         </div>
 
-        <!-- Mobile Navigation Menu -->
+        <!-- Mobile Navigation Drawer -->
         <div x-show="mobileMenuOpen"
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 -translate-x-full"
@@ -158,89 +211,81 @@ if (is_logged_in()) {
              x-transition:leave="transition ease-in duration-300"
              x-transition:leave-start="opacity-100 translate-x-0"
              x-transition:leave-end="opacity-0 -translate-x-full"
-             class="fixed inset-y-0 left-0 w-3/4 max-w-sm bg-cream z-50 md:hidden"
+             class="fixed inset-y-0 left-0 w-3/4 max-w-sm bg-cream z-50 md:hidden shadow-2xl p-6 flex flex-col justify-between"
              style="display: none;">
             
-            <div class="p-6 space-y-6">
-                <div class="flex items-center justify-between mb-8">
-                    <a href="/Blog/" class="font-serif text-2xl">Code & Canvas</a>
-                    <button @click="mobileMenuOpen = false" class="p-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
+            <div class="space-y-6">
+                <div class="flex items-center justify-between pb-4 border-b border-taupe">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-dark text-white flex items-center justify-center">
+                            <i data-lucide="feather" class="w-4 h-4"></i>
+                        </span>
+                        <span class="font-serif text-xl">Code &amp; Canvas</span>
+                    </div>
+                    <button @click="mobileMenuOpen = false" class="p-2 text-charcoal/60 hover:text-charcoal">
+                        <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
 
-                <nav class="space-y-4">
-                    <a href="/Blog/posts.php" @click="mobileMenuOpen = false" class="block py-2">Stories</a>
-                    <a href="/Blog/topics.php" @click="mobileMenuOpen = false" class="block py-2">Topics</a>
+                <!-- Mobile Search -->
+                <form action="/Blog/search.php" method="GET">
+                    <div class="relative">
+                        <i data-lucide="search" class="w-4 h-4 text-charcoal/40 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input type="search" name="q" placeholder="Search stories..." 
+                               class="w-full pl-9 pr-3 py-2 text-sm bg-white/70 border border-taupe rounded-lg">
+                    </div>
+                </form>
+
+                <nav class="space-y-2">
+                    <a href="/Blog/posts.php" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-charcoal hover:bg-taupe/40">
+                        <i data-lucide="book-open" class="w-5 h-5 text-charcoal/60"></i>
+                        <span class="font-medium">Stories</span>
+                    </a>
+                    <a href="/Blog/topics.php" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-charcoal hover:bg-taupe/40">
+                        <i data-lucide="tag" class="w-5 h-5 text-charcoal/60"></i>
+                        <span class="font-medium">Topics</span>
+                    </a>
                     <?php if (is_logged_in()): ?>
-                        <a href="/Blog/dashboard.php" @click="mobileMenuOpen = false" class="block py-2">Dashboard</a>
-                        <a href="/Blog/editor.php" @click="mobileMenuOpen = false" class="block py-2">Write</a>
-                        <hr class="my-4 border-taupe">
-                        <a href="/Blog/account-settings.php" @click="mobileMenuOpen = false" class="block py-2">Account Settings</a>
-                        <a href="/Blog/logout.php" @click="mobileMenuOpen = false" class="block py-2 text-red-600">Logout</a>
+                        <a href="/Blog/dashboard.php" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-charcoal hover:bg-taupe/40">
+                            <i data-lucide="layout-dashboard" class="w-5 h-5 text-charcoal/60"></i>
+                            <span class="font-medium">Dashboard</span>
+                        </a>
+                        <a href="/Blog/editor.php" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-dark text-white hover:bg-charcoal">
+                            <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                            <span class="font-medium">Write Story</span>
+                        </a>
+                        <hr class="my-3 border-taupe">
+                        <a href="/Blog/account-settings.php" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2 rounded-lg text-charcoal/80 hover:bg-taupe/40 text-sm">
+                            <i data-lucide="user" class="w-4 h-4"></i>
+                            <span>Account Settings</span>
+                        </a>
+                        <a href="/Blog/profile-settings.php" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2 rounded-lg text-charcoal/80 hover:bg-taupe/40 text-sm">
+                            <i data-lucide="image" class="w-4 h-4"></i>
+                            <span>Profile Settings</span>
+                        </a>
+                        <a href="/Blog/security-settings.php" @click="mobileMenuOpen = false" class="flex items-center gap-3 px-3 py-2 rounded-lg text-charcoal/80 hover:bg-taupe/40 text-sm">
+                            <i data-lucide="shield" class="w-4 h-4"></i>
+                            <span>Security Settings</span>
+                        </a>
                     <?php else: ?>
-                        <a href="/Blog/login.php" @click="mobileMenuOpen = false" class="block py-2">Sign in</a>
-                        <a href="/Blog/register.php" @click="mobileMenuOpen = false" class="block py-2">Register</a>
+                        <div class="pt-4 space-y-2">
+                            <a href="/Blog/login.php" @click="mobileMenuOpen = false" class="block w-full text-center py-2.5 border border-taupe rounded-lg font-medium">Sign in</a>
+                            <a href="/Blog/register.php" @click="mobileMenuOpen = false" class="block w-full text-center py-2.5 bg-dark text-white rounded-lg font-medium">Register</a>
+                        </div>
                     <?php endif; ?>
                 </nav>
             </div>
+
+            <?php if (is_logged_in()): ?>
+                <div class="pt-4 border-t border-taupe">
+                    <a href="/Blog/logout.php" @click="mobileMenuOpen = false" class="flex items-center gap-2 text-red-600 font-medium px-3 py-2 rounded-lg hover:bg-red-50">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            <?php endif; ?>
         </div>
     </header>
 
-    <!-- Mobile Search - made more compact -->
-    <div class="md:hidden px-2 sm:px-4 py-2 sm:py-3 bg-cream border-b border-taupe">
-        <form action="/Blog/search.php">
-            <div class="relative">
-                <input type="search" name="q" 
-                       placeholder="Search stories..." 
-                       class="w-full pl-3 pr-8 py-1.5 sm:py-2 text-sm bg-white/50 border border-taupe rounded-lg">
-                <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 text-charcoal/50">
-                    <svg width="16" height="16" fill="none" stroke="currentColor"> <!-- Smaller icon -->
-                        <path d="M19 19l-4.35-4.35M17 9A8 8 0 111 9a8 8 0 0116 0z" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Adjusted main content padding with dynamic classes -->
-    <main class="<?php
-        $current_page = basename($_SERVER['PHP_SELF']);
-        switch($current_page) {
-            case 'index.php':
-                echo 'pt-1'; // Hero section - smallest padding
-                break;
-            case 'posts.php':
-            case 'topics.php':
-                echo 'pt-10'; // Stories and Topics - more breathing room
-                break;
-            case 'login.php':
-            case 'register.php':
-                echo 'pt-16'; // Login/Register - medium padding
-                break;
-            default:
-                echo 'pt-24'; // Default padding for other pages
-        }
-        ?> sm:pt-<?php
-        switch($current_page) {
-            case 'index.php':
-                echo '1'; // Hero section - minimal padding on desktop
-                break;
-            case 'posts.php':
-            case 'topics.php':
-                echo '10'; // Stories and Topics - larger padding on desktop
-                break;
-            case 'login.php':
-            case 'register.php':
-                echo '16'; // Login/Register - medium padding on desktop
-                break;
-            default:
-                echo '24'; // Default padding for other pages
-        }
-        ?>">
-        <!-- Content will be loaded here -->
-    </main>
-</body>
-</html>
+    <!-- Main Content Container with safe header spacing -->
+    <main class="flex-grow pt-20 sm:pt-24">

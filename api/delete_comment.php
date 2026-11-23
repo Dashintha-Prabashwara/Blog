@@ -18,13 +18,13 @@ try {
     $stmt = $pdo->prepare("
         SELECT c.user_id, p.user_id as post_author_id 
         FROM comment c
-        JOIN blogPost p ON c.post_id = p.id
+        JOIN blogpost p ON c.post_id = p.id
         WHERE c.id = ?
     ");
     $stmt->execute([$commentId]);
     $result = $stmt->fetch();
 
-    if (!$result || ($result['user_id'] !== $_SESSION['user_id'] && $result['post_author_id'] !== $_SESSION['user_id'])) {
+    if (!$result || ((int)$result['user_id'] !== (int)$_SESSION['user_id'] && (int)$result['post_author_id'] !== (int)$_SESSION['user_id'])) {
         http_response_code(403);
         echo json_encode(['error' => 'Unauthorized']);
         exit;

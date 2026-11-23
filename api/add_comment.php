@@ -27,7 +27,7 @@ try {
     $commentId = $pdo->lastInsertId();
 
     // Get post author and create notification
-    $stmt = $pdo->prepare("SELECT user_id FROM blogPost WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT user_id FROM blogpost WHERE id = ?");
     $stmt->execute([$postId]);
     $authorId = $stmt->fetchColumn();
     

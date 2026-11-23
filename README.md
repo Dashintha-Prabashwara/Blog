@@ -1,4 +1,4 @@
-# 📝 Code & Canvas
+# Code & Canvas
 
 > A modern, minimalist blogging platform built with PHP, MySQL, and Tailwind CSS
 
@@ -10,28 +10,28 @@ Code & Canvas is a full-featured blogging platform designed for developers and d
 
 ![Code & Canvas Preview](./assets/images/preview.png)
 
-## ✨ Features
+## Features
 
 ### Core Features
-- 📱 **Responsive Design** - Mobile-first, works on all devices
-- ✍️ **Markdown Editor** - Write posts with Markdown support and live preview
-- 👤 **User Profiles** - Customizable profiles with avatar and bio
-- 💬 **Comments System** - Nested comments with likes/dislikes
-- ❤️ **Social Interactions** - Like posts, follow users, get notifications
-- 🔔 **Real-time Notifications** - Stay updated with activity
-- 🎨 **Topic Tags** - Organize content by topics
-- 📊 **Dashboard Analytics** - Track your post performance
-- 💾 **Draft System** - Auto-save drafts while writing
+- **Responsive Design** - Mobile-first, works on all devices
+- ️ **Markdown Editor** - Write posts with Markdown support and live preview
+- **User Profiles** - Customizable profiles with avatar and bio
+- **Comments System** - Nested comments with likes/dislikes
+- ️ **Social Interactions** - Like posts, follow users, get notifications
+- **Real-time Notifications** - Stay updated with activity
+- **Topic Tags** - Organize content by topics
+- **Dashboard Analytics** - Track your post performance
+- **Draft System** - Auto-save drafts while writing
 
 ### Advanced Features
-- 🔍 **Full-text Search** - Find posts quickly
-- 🎯 **Featured Posts** - Algorithm-based post featuring
-- 🖼️ **Image Uploads** - Support for post cover images
-- 📝 **SEO Optimized** - Dynamic meta tags and Open Graph support
-- 🔐 **Secure Authentication** - Password hashing with bcrypt
-- 🚀 **Performance** - Optimized database queries with proper indexing
+- **Full-text Search** - Find posts quickly
+- **Featured Posts** - Algorithm-based post featuring
+- ️ **Image Uploads** - Support for post cover images
+- **SEO Optimized** - Dynamic meta tags and Open Graph support
+- **Secure Authentication** - Password hashing with bcrypt
+- **Performance** - Optimized database queries with proper indexing
 
-## 🚀 Complete Beginner's Guide
+## Complete Beginner's Guide
 
 ### Step 1: Setting Up Your Development Environment
 
@@ -149,7 +149,7 @@ Code & Canvas is a full-featured blogging platform designed for developers and d
    - Add topics separated by commas
    - Click "Publish"
 
-### ⚠️ Troubleshooting Common Issues
+### ️ Troubleshooting Common Issues
 
 #### "Database connection failed"
 **Solution:**
@@ -186,7 +186,7 @@ Code & Canvas is a full-featured blogging platform designed for developers and d
 5. Save and restart Apache
 6. Access site at: `http://localhost:8080/Blog`
 
-### 🎯 Quick Reference
+### Quick Reference
 
 **Key Locations:**
 - Project folder: `C:\xampp\htdocs\Blog\`
@@ -202,7 +202,7 @@ Code & Canvas is a full-featured blogging platform designed for developers and d
 - `create_tables.sql` - Database structure
 - `uploads/` - User uploaded images
 
-## 🛠️ Tech Stack
+## ️ Tech Stack
 
 - **Backend**: PHP 8.0+
 - **Database**: MySQL 5.7+ / MariaDB 10.4+
@@ -210,7 +210,7 @@ Code & Canvas is a full-featured blogging platform designed for developers and d
 - **Markdown**: Marked.js
 - **Icons**: Heroicons (SVG)
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have the following installed:
 - PHP 8.0 or higher
@@ -218,7 +218,7 @@ Before you begin, ensure you have the following installed:
 - Apache/Nginx web server (XAMPP recommended for Windows)
 - Composer (optional, for future dependencies)
 
-## 🚀 Installation
+## Installation
 
 ### Option 1: Using XAMPP (Recommended for Windows)
 
@@ -285,7 +285,7 @@ chmod 755 uploads
 php -S localhost:8000
 ```
 
-## 📖 Usage
+## Usage
 
 ### Creating Your First Post
 
@@ -304,7 +304,7 @@ php -S localhost:8000
 3. Select "Account Settings" or "Profile Settings"
 4. Update your information and avatar
 
-## 🗂️ Project Structure
+## ️ Project Structure
 
 ```
 Blog/
@@ -338,18 +338,18 @@ Blog/
 └── README.md
 ```
 
-## 🔐 Security Features
+## Security Features
 
-- ✅ Password hashing with bcrypt
-- ✅ Prepared statements (SQL injection prevention)
-- ✅ XSS protection with htmlspecialchars
-- ✅ CSRF token validation
-- ✅ Session security
-- ✅ Input validation and sanitization
-- ✅ File upload validation
-- ✅ Environment variables for sensitive data
+- Password hashing with bcrypt
+- Prepared statements (SQL injection prevention)
+- XSS protection with htmlspecialchars
+- CSRF token validation
+- Session security
+- Input validation and sanitization
+- File upload validation
+- Environment variables for sensitive data
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
@@ -361,16 +361,16 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 🐛 Bug Reports & Feature Requests
+## Bug Reports & Feature Requests
 
 - **Bug Reports**: Please use the [GitHub Issues](https://github.com/yourusername/code-canvas/issues) page
 - **Feature Requests**: We'd love to hear your ideas! Open an issue with the "enhancement" label
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Developer
+## ‍ Developer
 
 **Dashintha Jayawardana**
 
@@ -378,14 +378,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - GitHub: [@Dashintha-Prabashwara](https://github.com/Dashintha-Prabashwara)
 - LinkedIn: [Dashintha Jayawardana](https://www.linkedin.com/in/dashintha-jayawardana-7b740b26b/)
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Design inspiration from Medium and DEV Community
 - Icons by Heroicons
 - Typography by Google Fonts (Fraunces & Inter)
 - Markdown parsing by Marked.js
 
-## 📊 Database Schema
+## Database Schema
 
 The application uses a well-structured relational database with the following main tables:
 
@@ -399,11 +399,11 @@ The application uses a well-structured relational database with the following ma
 
 For detailed schema, see [create_tables.sql](create_tables.sql)
 
-## 🔄 Changelog
+## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for a list of changes and versions.
 
-## 💬 Support
+## Support
 
 If you need help or have questions:
 - Check the [Issues](https://github.com/yourusername/code-canvas/issues) page
@@ -412,6 +412,6 @@ If you need help or have questions:
 
 ---
 
-Made with ❤️ by [Dashintha Jayawardana](https://dashijayawardana.vercel.app/)
+Made with ️ by [Dashintha Jayawardana](https://dashijayawardana.vercel.app/)
 
 

@@ -7,169 +7,221 @@ if (isset($_SESSION['user_id'])) {
     exit;
 }
 
+$pageTitle = 'Create Account — Code & Canvas';
 require_once 'includes/header.php';
+
+$storyCount = (int)$pdo->query("SELECT COUNT(*) FROM blogpost")->fetchColumn();
+$userCount = (int)$pdo->query("SELECT COUNT(*) FROM user")->fetchColumn();
 ?>
 
-<div class="min-h-screen flex">
-    <div class="flex-1 flex items-center justify-center px-4 relative z-10">
-        <div class="max-w-md w-full">
-            <div class="text-center mb-8">
-                <h1 class="font-serif text-3xl mb-2">Join the Community</h1>
-                <p class="text-charcoal/70">Create your Code & Canvas account</p>
+<div class="min-h-[calc(100vh-16rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl w-full grid lg:grid-cols-2 gap-12 items-center">
+        <div class="w-full max-w-md mx-auto">
+            <div class="mb-8 text-center lg:text-left">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-accent/10 text-accent mb-3">
+                    <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                    Get Started
+                </span>
+                <h1 class="font-serif text-3xl font-bold tracking-tight text-charcoal">Create your account</h1>
+                <p class="text-sm text-charcoal/60 mt-2">Join Code &amp; Canvas to publish stories and join discussions.</p>
             </div>
 
             <?php if (isset($_SESSION['errors'])): ?>
-                <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
-                    <div class="flex items-start">
-                        <svg class="w-5 h-5 text-red-500 mt-0.5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293z"/>
-                        </svg>
-                        <div class="flex-1">
-                            <?php foreach ($_SESSION['errors'] as $error): ?>
-                                <p class="text-red-700 text-sm mb-1">• <?= htmlspecialchars($error) ?></p>
-                            <?php endforeach; ?>
-                        </div>
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl space-y-1">
+                    <div class="flex items-center gap-2 text-red-700 font-medium text-sm mb-1">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        <span>Please fix the following:</span>
                     </div>
-                    <?php unset($_SESSION['errors']); ?>
+                    <?php foreach ($_SESSION['errors'] as $error): ?>
+                        <p class="text-red-600 text-xs pl-6">• <?= htmlspecialchars($error) ?></p>
+                    <?php endforeach; ?>
                 </div>
+                <?php unset($_SESSION['errors']); ?>
             <?php endif; ?>
 
-            <form method="POST" action="/Blog/auth/register.php" id="registerForm" class="bg-white p-8 rounded-2xl shadow-sm">
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-sm text-red-700">
+                    <i data-lucide="alert-circle" class="w-4 h-4 text-red-600 shrink-0"></i>
+                    <span><?= htmlspecialchars($_SESSION['error']) ?></span>
+                </div>
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+
+            <form method="POST" action="/Blog/auth/register.php" id="registerForm" class="bg-white p-8 rounded-2xl shadow-sm border border-taupe space-y-4">
                 <input type="hidden" name="return" value="<?= htmlspecialchars($_GET['return'] ?? '/Blog/dashboard.php') ?>">
-                <div class="space-y-4">
-                    <div>
-                        <input type="text" name="username" placeholder="Username" required 
-                               class="w-full px-4 py-2 border border-taupe rounded-lg"
-                               pattern=".{3,}"
-                               oninput="validateForm()"
-                               title="Username must be at least 3 characters long">
-                        <span class="text-red-600 text-sm hidden" id="usernameError"></span>
-                    </div>
-                    
-                    <div>
-                        <input type="email" name="email" placeholder="Email" required 
-                               class="w-full px-4 py-2 border border-taupe rounded-lg"
-                               oninput="validateForm()">
-                        <span class="text-red-600 text-sm hidden" id="emailError"></span>
-                    </div>
-                    
+                
+                <div>
+                    <label class="block text-sm font-medium mb-1.5 text-charcoal/80">Username</label>
                     <div class="relative">
-                        <input type="password" name="password" id="password" placeholder="Password" required 
-                               class="w-full px-4 py-2 border border-taupe rounded-lg"
+                        <i data-lucide="user" class="w-4 h-4 text-charcoal/40 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" name="username" placeholder="johndoe" required 
+                               class="w-full pl-10 pr-4 py-2.5 text-sm border border-taupe rounded-xl focus:outline-none focus:ring-2 focus:ring-accent/40 bg-cream/30"
+                               pattern=".{3,}"
                                oninput="validateForm()">
-                        <button type="button" onclick="togglePassword('password')"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/50 hover:text-charcoal">
-                            <svg class="w-5 h-5" id="password-eye" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
+                    </div>
+                    <span class="text-red-600 text-xs hidden mt-1" id="usernameError"></span>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-1.5 text-charcoal/80">Email Address</label>
+                    <div class="relative">
+                        <i data-lucide="mail" class="w-4 h-4 text-charcoal/40 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="email" name="email" placeholder="you@domain.com" required 
+                               class="w-full pl-10 pr-4 py-2.5 text-sm border border-taupe rounded-xl focus:outline-none focus:ring-2 focus:ring-accent/40 bg-cream/30"
+                               oninput="validateForm()">
+                    </div>
+                    <span class="text-red-600 text-xs hidden mt-1" id="emailError"></span>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-1.5 text-charcoal/80">Password</label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="w-4 h-4 text-charcoal/40 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="password" name="password" id="password" placeholder="••••••••" required 
+                               class="w-full pl-10 pr-11 py-2.5 text-sm border border-taupe rounded-xl focus:outline-none focus:ring-2 focus:ring-accent/40 bg-cream/30"
+                               oninput="validateForm()">
+                        <button type="button" onclick="togglePasswordVisibility('password', this)"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal p-1">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
                         </button>
-                        <span class="text-red-600 text-sm hidden" id="passwordError"></span>
-                        <div class="mt-2 space-y-1 text-sm text-charcoal/60">
-                            <p id="lengthCheck" class="transition-colors">✗ At least 8 characters</p>
-                            <p id="upperCheck" class="transition-colors">✗ One uppercase letter</p>
-                            <p id="lowerCheck" class="transition-colors">✗ One lowercase letter</p>
-                            <p id="numberCheck" class="transition-colors">✗ One number</p>
+                    </div>
+                    
+                    <div class="mt-3 p-3 bg-cream/50 rounded-xl border border-taupe/60 space-y-1.5 text-xs">
+                        <div id="lengthCheck" class="flex items-center gap-2 text-charcoal/50 transition-colors">
+                            <i data-lucide="circle" class="w-3.5 h-3.5"></i>
+                            <span>At least 8 characters</span>
+                        </div>
+                        <div id="upperCheck" class="flex items-center gap-2 text-charcoal/50 transition-colors">
+                            <i data-lucide="circle" class="w-3.5 h-3.5"></i>
+                            <span>One uppercase letter</span>
+                        </div>
+                        <div id="lowerCheck" class="flex items-center gap-2 text-charcoal/50 transition-colors">
+                            <i data-lucide="circle" class="w-3.5 h-3.5"></i>
+                            <span>One lowercase letter</span>
+                        </div>
+                        <div id="numberCheck" class="flex items-center gap-2 text-charcoal/50 transition-colors">
+                            <i data-lucide="circle" class="w-3.5 h-3.5"></i>
+                            <span>One number</span>
+                        </div>
+                    </div>
+                    <span class="text-red-600 text-xs hidden mt-1" id="passwordError"></span>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-1.5 text-charcoal/80">Confirm Password</label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="w-4 h-4 text-charcoal/40 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="password" name="password_confirm" id="password_confirm" 
+                               placeholder="••••••••" required 
+                               class="w-full pl-10 pr-11 py-2.5 text-sm border border-taupe rounded-xl focus:outline-none focus:ring-2 focus:ring-accent/40 bg-cream/30"
+                               oninput="validateForm()">
+                        <button type="button" onclick="togglePasswordVisibility('password_confirm', this)"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/40 hover:text-charcoal p-1">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <span class="text-red-600 text-xs hidden mt-1" id="confirmError"></span>
+                </div>
+
+                <button type="submit" id="submitBtn" disabled
+                        class="w-full py-2.5 px-4 bg-dark text-white rounded-xl hover:bg-charcoal font-medium text-sm shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    <span>Create Account</span>
+                </button>
+            </form>
+
+            <p class="text-center mt-6 text-sm text-charcoal/70">
+                Already have an account? 
+                <a href="/Blog/login.php" class="text-accent font-semibold hover:underline">Sign in</a>
+            </p>
+        </div>
+        
+        <!-- Right side - Community highlights -->
+        <div class="hidden lg:flex flex-col justify-center p-10 bg-white/60 border border-taupe rounded-3xl backdrop-blur-sm relative overflow-hidden">
+            <div class="space-y-6">
+                <span class="w-12 h-12 rounded-2xl bg-dark text-white flex items-center justify-center shadow-md">
+                    <i data-lucide="feather" class="w-6 h-6"></i>
+                </span>
+                
+                <h2 class="font-serif text-3xl font-bold text-charcoal leading-snug">
+                    Share your knowledge with fellow builders.
+                </h2>
+                
+                <ul class="space-y-3.5 text-sm text-charcoal/75 pt-2">
+                    <li class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                        </span>
+                        <span>Write beautiful markdown posts with live preview</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                        </span>
+                        <span>Organize stories with multi-topic taxonomy</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                        </span>
+                        <span>Receive likes, threaded comments, and real-time alerts</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                        </span>
+                        <span>Analytics dashboard to monitor readership growth</span>
+                    </li>
+                </ul>
+
+                <div class="grid grid-cols-2 gap-4 pt-6 border-t border-taupe">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center">
+                            <i data-lucide="book-open" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="block font-serif text-2xl font-bold text-charcoal"><?= number_format($storyCount) ?></span>
+                            <span class="text-xs text-charcoal/60">Published Stories</span>
                         </div>
                     </div>
                     
-                    <div class="relative">
-                        <input type="password" name="password_confirm" id="password_confirm" 
-                               placeholder="Confirm Password" required 
-                               class="w-full px-4 py-2 border border-taupe rounded-lg"
-                               oninput="validateForm()">
-                        <button type="button" onclick="togglePassword('password_confirm')"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/50 hover:text-charcoal">
-                            <svg class="w-5 h-5" id="password_confirm-eye" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </button>
-                        <span class="text-red-600 text-sm hidden" id="confirmError"></span>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center">
+                            <i data-lucide="users" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="block font-serif text-2xl font-bold text-charcoal"><?= number_format($userCount) ?></span>
+                            <span class="text-xs text-charcoal/60">Community Members</span>
+                        </div>
                     </div>
-
-                    <button type="submit" id="submitBtn" disabled
-                            class="w-full py-2 px-4 bg-dark text-white rounded-lg hover:bg-charcoal disabled:opacity-50 disabled:cursor-not-allowed">
-                        Create Account
-                    </button>
-                </div>
-            </form>
-
-            <p class="text-center mt-6 text-sm">
-                Already have an account? 
-                <a href="/Blog/login.php" class="text-accent hover:underline">Sign in</a>
-            </p>
-        </div>
-    </div>
-    
-    <!-- Right side - Welcome Text -->
-    <div class="hidden lg:flex flex-1 items-center justify-center relative overflow-hidden">
-        <!-- Animated background elements -->
-        <div class="absolute inset-0">
-            <div class="absolute w-24 h-24 bg-accent/5 backdrop-blur-xl rounded-full top-32 left-32 animate-float-slow"></div>
-            <div class="absolute w-40 h-40 bg-accent/5 backdrop-blur-xl rounded-full bottom-20 right-20 animate-float-medium"></div>
-            <div class="absolute w-16 h-16 bg-accent/5 backdrop-blur-xl rounded-full top-20 right-32 animate-float-fast"></div>
-        </div>
-        
-        <div class="relative text-charcoal max-w-md p-8">
-            <h2 class="font-serif text-4xl mb-6">Join Our Community</h2>
-            <p class="text-charcoal/70 text-lg leading-relaxed mb-8">
-                Share your knowledge, experiences, and insights with a community of passionate 
-                developers and designers. Start your journey today!
-            </p>
-            <ul class="space-y-4 text-charcoal/70">
-                <li class="flex items-center gap-3">
-                    <svg class="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
-                    </svg>
-                    Write and share your stories
-                </li>
-                <li class="flex items-center gap-3">
-                    <svg class="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
-                    </svg>
-                    Connect with fellow developers
-                </li>
-                <li class="flex items-center gap-3">
-                    <svg class="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
-                    </svg>
-                    Grow your professional network
-                </li>
-            </ul>
-            <div class="flex gap-6 mt-8 text-charcoal/60">
-                <div>
-                    <span class="block font-serif text-2xl text-charcoal">
-                        <?= $pdo->query("SELECT COUNT(*) FROM blogpost")->fetchColumn() ?>
-                    </span>
-                    <span>Stories Shared</span>
-                </div>
-                <div>
-                    <span class="block font-serif text-2xl text-charcoal">
-                        <?= $pdo->query("SELECT COUNT(*) FROM user")->fetchColumn() ?>
-                    </span>
-                    <span>Community Members</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<?php require_once 'includes/footer.php'; ?>
-
 <script>
-function togglePassword(inputId) {
+function togglePasswordVisibility(inputId, btn) {
     const input = document.getElementById(inputId);
-    const eye = document.getElementById(inputId + '-eye');
-    
-    if (input.type === 'password') {
-        input.type = 'text';
-        eye.innerHTML = `<path d="M3 3l18 18M10.5 10.677a2 2 0 002.823 2.823" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M7.362 7.561C5.68 8.74 4.279 10.42 3 12c1.274 4.057 5.065 7 9.542 7 1.99 0 3.842-.372 5.47-1.022M14.83 9.17C14.298 8.584 13.494 8 12 8c-2.474 0-4.35 2.01-4.35 4.5S9.526 17 12 17c.512 0 1.154-.228 1.967-.683" stroke-width="2" stroke-linecap="round"/>`;
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    btn.innerHTML = isPassword 
+        ? '<i data-lucide="eye-off" class="w-4 h-4"></i>' 
+        : '<i data-lucide="eye" class="w-4 h-4"></i>';
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+}
+
+function updateCheckItem(elementId, isValid, label) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    if (isValid) {
+        el.className = 'flex items-center gap-2 text-green-700 transition-colors font-medium';
+        el.innerHTML = `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-600"></i><span>${label}</span>`;
     } else {
-        input.type = 'password';
-        eye.innerHTML = `<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-width="2" stroke-linecap="round"/>`;
+        el.className = 'flex items-center gap-2 text-charcoal/50 transition-colors';
+        el.innerHTML = `<i data-lucide="circle" class="w-3.5 h-3.5"></i><span>${label}</span>`;
     }
 }
 
@@ -182,7 +234,7 @@ function validateForm() {
     let isValid = true;
 
     // Username validation
-    if (username.value.length < 3) {
+    if (username.value.trim().length < 3) {
         showError('usernameError', 'Username must be at least 3 characters long');
         isValid = false;
     } else {
@@ -191,7 +243,7 @@ function validateForm() {
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.value)) {
+    if (!emailRegex.test(email.value.trim())) {
         showError('emailError', 'Please enter a valid email address');
         isValid = false;
     } else {
@@ -204,58 +256,52 @@ function validateForm() {
     const hasLower = /[a-z]/.test(password.value);
     const hasNumber = /[0-9]/.test(password.value);
     
-    // Update password requirement checks with colors
-    document.getElementById('lengthCheck').innerHTML = 
-        `${hasLength ? '✓' : '✗'} At least 8 characters`;
-    document.getElementById('lengthCheck').className = 
-        `transition-colors ${hasLength ? 'text-green-600' : 'text-charcoal/60'}`;
-
-    document.getElementById('upperCheck').innerHTML = 
-        `${hasUpper ? '✓' : '✗'} One uppercase letter`;
-    document.getElementById('upperCheck').className = 
-        `transition-colors ${hasUpper ? 'text-green-600' : 'text-charcoal/60'}`;
-
-    document.getElementById('lowerCheck').innerHTML = 
-        `${hasLower ? '✓' : '✗'} One lowercase letter`;
-    document.getElementById('lowerCheck').className = 
-        `transition-colors ${hasLower ? 'text-green-600' : 'text-charcoal/60'}`;
-
-    document.getElementById('numberCheck').innerHTML = 
-        `${hasNumber ? '✓' : '✗'} One number`;
-    document.getElementById('numberCheck').className = 
-        `transition-colors ${hasNumber ? 'text-green-600' : 'text-charcoal/60'}`;
+    updateCheckItem('lengthCheck', hasLength, 'At least 8 characters');
+    updateCheckItem('upperCheck', hasUpper, 'One uppercase letter');
+    updateCheckItem('lowerCheck', hasLower, 'One lowercase letter');
+    updateCheckItem('numberCheck', hasNumber, 'One number');
     
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+
     const isPasswordValid = hasLength && hasUpper && hasLower && hasNumber;
-    if (!isPasswordValid) {
-        showError('passwordError', 'Password does not meet requirements');
+    if (!isPasswordValid && password.value.length > 0) {
+        showError('passwordError', 'Password does not meet all requirements');
         isValid = false;
     } else {
         hideError('passwordError');
     }
 
     // Confirm password
-    if (password.value !== confirm.value) {
+    if (confirm.value.length > 0 && password.value !== confirm.value) {
         showError('confirmError', 'Passwords do not match');
         isValid = false;
     } else {
         hideError('confirmError');
     }
 
-    // Update submit button state
+    if (!hasLength || !hasUpper || !hasLower || !hasNumber || password.value !== confirm.value || !emailRegex.test(email.value) || username.value.trim().length < 3) {
+        isValid = false;
+    }
+
     submitBtn.disabled = !isValid;
 }
 
 function showError(elementId, message) {
     const error = document.getElementById(elementId);
+    if (!error) return;
     error.textContent = message;
     error.classList.remove('hidden');
 }
 
 function hideError(elementId) {
     const error = document.getElementById(elementId);
+    if (!error) return;
     error.classList.add('hidden');
 }
 
-// Initialize validation on page load
 document.addEventListener('DOMContentLoaded', validateForm);
 </script>
+
+<?php require_once 'includes/footer.php'; ?>

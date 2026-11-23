@@ -204,7 +204,7 @@ CREATE INDEX `idx_notification_unread` ON `notification` (`user_id`, `read`, `cr
 COMMIT;
 
 -- ============================================
--- ✅ Setup Complete!
+-- [OK] Setup Complete!
 -- ============================================
 -- If you see this message, the database was created successfully.
 -- 

@@ -18,19 +18,27 @@ if (!$id) {
 
 try {
     // Check post ownership
-    $stmt = $pdo->prepare("SELECT user_id FROM blogPost WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT user_id, image_url FROM blogpost WHERE id = ?");
     $stmt->execute([$id]);
     $post = $stmt->fetch();
 
-    if (!$post || $post['user_id'] !== $_SESSION['user_id']) {
+    if (!$post || (int)$post['user_id'] !== (int)$_SESSION['user_id']) {
         http_response_code(403);
         echo json_encode(['error' => 'Unauthorized']);
         exit;
     }
 
     // Delete post
-    $stmt = $pdo->prepare("DELETE FROM blogPost WHERE id = ?");
+    $stmt = $pdo->prepare("DELETE FROM blogpost WHERE id = ?");
     $stmt->execute([$id]);
+
+    // Clean up uploaded image if exists
+    if (!empty($post['image_url'])) {
+        $imgPath = __DIR__ . '/..' . str_replace('/Blog', '', $post['image_url']);
+        if (file_exists($imgPath)) {
+            @unlink($imgPath);
+        }
+    }
 
     echo json_encode(['success' => true]);
     exit;

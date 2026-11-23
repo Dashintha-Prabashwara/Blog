@@ -2,7 +2,7 @@
 
 First off, thank you for considering contributing to Code & Canvas! It's people like you that make this platform better for everyone.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
 - [How Can I Contribute?](#how-can-i-contribute)
@@ -11,7 +11,7 @@ First off, thank you for considering contributing to Code & Canvas! It's people 
 - [Commit Guidelines](#commit-guidelines)
 - [Pull Request Process](#pull-request-process)
 
-## 🤝 Code of Conduct
+## Code of Conduct
 
 This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code. Please report unacceptable behavior to the project maintainers.
 
@@ -23,7 +23,7 @@ This project and everyone participating in it is governed by our Code of Conduct
 - Focus on what is best for the community
 - Show empathy towards other community members
 
-## 🎯 How Can I Contribute?
+## How Can I Contribute?
 
 ### Reporting Bugs
 
@@ -52,7 +52,7 @@ Unsure where to begin? Look for issues labeled:
 - `bug` - Something isn't working
 - `enhancement` - New feature or request
 
-## 🛠️ Development Setup
+## ️ Development Setup
 
 1. **Fork and Clone**
    ```bash
@@ -95,7 +95,7 @@ Unsure where to begin? Look for issues labeled:
    php -S localhost:8000
    ```
 
-## 📝 Coding Standards
+## Coding Standards
 
 ### PHP
 
@@ -162,7 +162,7 @@ async function toggleLike(postId) {
 - Use foreign keys for referential integrity
 - Document schema changes
 
-## 💬 Commit Guidelines
+## Commit Guidelines
 
 ### Commit Message Format
 
@@ -203,7 +203,7 @@ due to incorrect session configuration.
 Fixes #456
 ```
 
-## 🔄 Pull Request Process
+## Pull Request Process
 
 1. **Update Documentation**
    - Update README.md if needed
@@ -254,7 +254,7 @@ Add screenshots here
 - [ ] Tests added/updated
 ```
 
-## 🧪 Testing
+## Testing
 
 Before submitting:
 
@@ -273,18 +273,18 @@ Before submitting:
    - Tablets
    - Desktop
 
-## 📚 Resources
+## Resources
 
 - [PHP Documentation](https://www.php.net/docs.php)
 - [Tailwind CSS Docs](https://tailwindcss.com/docs)
 - [Alpine.js Documentation](https://alpinejs.dev/)
 - [Marked.js Documentation](https://marked.js.org/)
 
-## ❓ Questions?
+## Questions?
 
 Feel free to:
 - Open an issue
 - Contact the maintainer
 - Join discussions
 
-Thank you for contributing! 🎉
+Thank you for contributing! 

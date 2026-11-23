@@ -36,7 +36,7 @@ try {
         "DELETE FROM notification WHERE user_id = ? OR from_user_id = ?",
         "DELETE FROM draft_post WHERE user_id = ?",
         "DELETE FROM comment WHERE user_id = ?",
-        "DELETE FROM blogPost WHERE user_id = ?",
+        "DELETE FROM blogpost WHERE user_id = ?",
         "DELETE FROM user WHERE id = ?"
     ];
 

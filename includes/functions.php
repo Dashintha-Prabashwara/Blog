@@ -72,8 +72,8 @@ function getUserStats($userId) {
     // Get total likes received
     $stmt = $pdo->prepare("
         SELECT 
-            (SELECT COUNT(*) FROM post_like pl JOIN blogPost bp ON pl.post_id = bp.id WHERE bp.user_id = ?) as total_likes,
-            (SELECT COUNT(*) FROM comment c JOIN blogPost bp ON c.post_id = bp.id WHERE bp.user_id = ?) as total_comments,
+            (SELECT COUNT(*) FROM post_like pl JOIN blogpost bp ON pl.post_id = bp.id WHERE bp.user_id = ?) as total_likes,
+            (SELECT COUNT(*) FROM comment c JOIN blogpost bp ON c.post_id = bp.id WHERE bp.user_id = ?) as total_comments,
             (SELECT COUNT(*) FROM follow WHERE following_id = ?) as followers,
             (SELECT COUNT(*) FROM comment_like cl JOIN comment c ON cl.comment_id = c.id WHERE c.user_id = ?) as comment_likes,
             (SELECT COUNT(*) FROM comment_dislike cd JOIN comment c ON cd.comment_id = c.id WHERE c.user_id = ?) as comment_dislikes
@@ -119,7 +119,7 @@ function getNotifications($userId, $limit = 10) {
                TIME_TO_SEC(TIMEDIFF(CURRENT_TIMESTAMP, n.created_at)) as seconds_ago
         FROM notification n
         JOIN user u ON n.from_user_id = u.id
-        LEFT JOIN blogPost bp ON n.post_id = bp.id
+        LEFT JOIN blogpost bp ON n.post_id = bp.id
         WHERE n.user_id = ?
         ORDER BY n.created_at DESC
         LIMIT ?
