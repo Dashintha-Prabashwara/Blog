@@ -9,9 +9,10 @@ function getLikeCount($postId) {
 
 function hasLiked($postId) {
     global $pdo;
-    if (!isset($_SESSION['user_id'])) return false;
+    $actingUserId = $_SESSION['user_id'] ?? ($_SESSION['guest_user_id'] ?? null);
+    if (!$actingUserId) return false;
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM post_like WHERE post_id = ? AND user_id = ?");
-    $stmt->execute([$postId, $_SESSION['user_id']]);
+    $stmt->execute([$postId, $actingUserId]);
     return (bool)$stmt->fetchColumn();
 }
 

@@ -19,7 +19,7 @@ $featured = $pdo->query("
     LIMIT 1
 ")->fetch();
 
-$pageTitle = 'Code & Canvas — Where Design Meets Digital Craft';
+$pageTitle = 'Code & Canvas — Engineering Journal by Dashintha Jayawardana';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -29,31 +29,35 @@ require_once __DIR__ . '/includes/header.php';
         <div class="max-w-3xl mx-auto px-4 sm:px-8 text-center relative z-10">
             <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 mb-6 text-xs font-semibold bg-accent/10 text-accent rounded-full">
                 <i data-lucide="feather" class="w-3.5 h-3.5"></i>
-                <span>A Mindful Platform for Creators &amp; Engineers</span>
+                <span>Engineering Journal by Dashintha Jayawardana</span>
             </span>
             
             <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight font-bold tracking-tight text-charcoal mb-6 text-balance">
-                Where Design Meets Digital Craft
+                Code &amp; Canvas
             </h1>
             
             <p class="text-base sm:text-lg text-charcoal/70 mb-8 max-w-2xl mx-auto leading-relaxed">
-                A modern publishing space designed for developers, designers, and thinkers to share knowledge, explore typography, and document ideas.
+                Documenting deep-dives into systems architecture, IoT systems, cloud engineering, and technical lessons learned building software.
             </p>
             
             <!-- Stats Row -->
             <div class="flex items-center justify-center gap-8 sm:gap-12 mb-8 py-4 border-y border-taupe/60 max-w-md mx-auto">
                 <div class="text-center">
                     <span class="block font-serif text-3xl font-bold text-charcoal">
-                        <?= number_format($totalUsers) ?>
-                    </span>
-                    <span class="text-xs text-charcoal/60 uppercase tracking-wider font-medium">Members</span>
-                </div>
-                <div class="h-8 w-px bg-taupe"></div>
-                <div class="text-center">
-                    <span class="block font-serif text-3xl font-bold text-charcoal">
                         <?= number_format($totalPosts) ?>
                     </span>
                     <span class="text-xs text-charcoal/60 uppercase tracking-wider font-medium">Stories</span>
+                </div>
+                <div class="h-8 w-px bg-taupe"></div>
+                <div class="text-center">
+                    <a href="https://dashijay.dev" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center">
+                        <span class="block font-serif text-3xl font-bold text-charcoal group-hover:text-accent transition-colors">
+                            dashijay.dev
+                        </span>
+                        <span class="text-xs text-charcoal/60 uppercase tracking-wider font-medium flex items-center gap-1">
+                            Portfolio <i data-lucide="arrow-up-right" class="w-3 h-3"></i>
+                        </span>
+                    </a>
                 </div>
             </div>
 
@@ -63,17 +67,16 @@ require_once __DIR__ . '/includes/header.php';
                     <i data-lucide="book-open" class="w-4 h-4"></i>
                     <span>Explore Stories</span>
                 </a>
-                <?php if (!isset($_SESSION['user_id'])): ?>
-                    <a href="/Blog/register.php" 
-                       class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-charcoal/30 hover:border-charcoal bg-white/70 hover:bg-white text-charcoal transition-all text-sm font-medium">
-                        <i data-lucide="user-plus" class="w-4 h-4"></i>
-                        <span>Join Community</span>
-                    </a>
-                <?php else: ?>
+                <a href="https://dashijay.dev" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-charcoal/30 hover:border-charcoal bg-white/70 hover:bg-white text-charcoal transition-all text-sm font-medium">
+                    <i data-lucide="external-link" class="w-4 h-4 text-accent"></i>
+                    <span>Visit Portfolio</span>
+                </a>
+                <?php if (isset($_SESSION['user_id'])): ?>
                     <a href="/Blog/editor.php" 
-                       class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-charcoal/30 hover:border-charcoal bg-white/70 hover:bg-white text-charcoal transition-all text-sm font-medium">
+                       class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-white hover:bg-accent/90 transition-all text-sm font-medium shadow-sm">
                         <i data-lucide="pen-tool" class="w-4 h-4"></i>
-                        <span>Write a Story</span>
+                        <span>Write Story</span>
                     </a>
                 <?php endif; ?>
             </div>

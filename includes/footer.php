@@ -34,9 +34,9 @@
                 <div class="space-y-4">
                     <h5 class="font-medium text-sm tracking-wider uppercase text-white/80">Developer</h5>
                     <div class="flex flex-col gap-2.5 text-sm text-white/60">
-                        <a href="https://dashijayawardana.vercel.app/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors flex items-center gap-1.5">
+                        <a href="https://dashijay.dev" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors flex items-center gap-1.5">
                             <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-                            <span>Portfolio</span>
+                            <span>Portfolio (dashijay.dev)</span>
                         </a>
                         <a href="https://github.com/Dashintha-Prabashwara" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors flex items-center gap-1.5">
                             <i data-lucide="github" class="w-3.5 h-3.5"></i>

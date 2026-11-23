@@ -10,6 +10,11 @@ if ($uri === '' || $uri === '/') {
     $uri = '/index.php';
 }
 
+if ($uri === '/admin' || $uri === '/admin/') {
+    require __DIR__ . '/admin.php';
+    exit;
+}
+
 $file = __DIR__ . $uri;
 
 if (file_exists($file) && !is_dir($file)) {

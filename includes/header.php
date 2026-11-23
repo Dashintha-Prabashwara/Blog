@@ -83,11 +83,14 @@ if (is_logged_in()) {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <nav class="flex items-center justify-between h-16 sm:h-20">
                 <!-- Logo -->
-                <a href="/Blog/" class="flex items-center gap-2 group">
+                <a href="/Blog/" class="flex items-center gap-2.5 group">
                     <span class="w-9 h-9 rounded-xl bg-dark text-white flex items-center justify-center group-hover:bg-accent transition-colors shadow-sm">
                         <i data-lucide="feather" class="w-5 h-5"></i>
                     </span>
-                    <span class="font-serif text-xl sm:text-2xl tracking-tight">Code &amp; Canvas</span>
+                    <div class="flex flex-col">
+                        <span class="font-serif text-lg sm:text-xl font-bold tracking-tight leading-tight">Code &amp; Canvas</span>
+                        <span class="text-[10px] uppercase font-mono tracking-wider text-charcoal/50 leading-none">by Dashintha Jayawardana</span>
+                    </div>
                 </a>
 
                 <!-- Desktop Search -->
@@ -173,10 +176,10 @@ if (is_logged_in()) {
                             </div>
                         </div>
                     <?php else: ?>
-                        <a href="/Blog/login.php" class="text-charcoal/80 hover:text-charcoal transition-colors text-sm font-medium">Sign in</a>
-                        <a href="/Blog/register.php" class="inline-flex items-center gap-2 px-5 py-2 bg-dark text-white rounded-lg hover:bg-charcoal transition-all text-sm font-medium shadow-sm">
-                            <i data-lucide="user-plus" class="w-4 h-4"></i>
-                            <span>Register</span>
+                        <a href="https://dashijay.dev" target="_blank" rel="noopener noreferrer" 
+                           class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-taupe text-xs font-semibold text-charcoal/80 hover:bg-white hover:text-dark transition-all shadow-sm">
+                            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-accent"></i>
+                            <span>dashijay.dev</span>
                         </a>
                     <?php endif; ?>
                 </div>
@@ -268,9 +271,12 @@ if (is_logged_in()) {
                             <span>Security Settings</span>
                         </a>
                     <?php else: ?>
-                        <div class="pt-4 space-y-2">
-                            <a href="/Blog/login.php" @click="mobileMenuOpen = false" class="block w-full text-center py-2.5 border border-taupe rounded-lg font-medium">Sign in</a>
-                            <a href="/Blog/register.php" @click="mobileMenuOpen = false" class="block w-full text-center py-2.5 bg-dark text-white rounded-lg font-medium">Register</a>
+                        <div class="pt-4">
+                            <a href="https://dashijay.dev" target="_blank" rel="noopener noreferrer" @click="mobileMenuOpen = false" 
+                               class="flex items-center justify-center gap-2 w-full py-2.5 bg-white border border-taupe rounded-xl text-sm font-semibold text-charcoal shadow-sm hover:bg-cream">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4 text-accent"></i>
+                                <span>Portfolio (dashijay.dev)</span>
+                            </a>
                         </div>
                     <?php endif; ?>
                 </nav>

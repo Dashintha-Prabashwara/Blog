@@ -157,22 +157,13 @@ $readTime = max(1, ceil($wordCount / 200));
     <!-- Interaction Bar (Like & Stats) -->
     <div class="flex items-center justify-between py-6 border-y border-taupe mb-12">
         <div class="flex items-center gap-6">
-            <?php if (is_logged_in()): ?>
-                <button onclick="toggleLike(<?= (int)$post['id'] ?>)" 
-                        id="likeBtn"
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-taupe hover:border-accent bg-white shadow-sm transition-all text-sm font-medium <?= hasLiked($post['id']) ? 'text-accent border-accent' : 'text-charcoal/70' ?>">
-                    <i data-lucide="heart" class="w-5 h-5 <?= hasLiked($post['id']) ? 'fill-accent text-accent' : '' ?>" id="likeIcon"></i>
-                    <span id="likeCount"><?= getLikeCount($post['id']) ?></span>
-                    <span class="hidden sm:inline">Likes</span>
-                </button>
-            <?php else: ?>
-                <button onclick="showAuthPrompt()" 
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-taupe bg-white shadow-sm text-sm font-medium text-charcoal/70">
-                    <i data-lucide="heart" class="w-5 h-5"></i>
-                    <span><?= getLikeCount($post['id']) ?></span>
-                    <span class="hidden sm:inline">Likes</span>
-                </button>
-            <?php endif; ?>
+            <button onclick="toggleLike(<?= (int)$post['id'] ?>)" 
+                    id="likeBtn"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-taupe hover:border-accent bg-white shadow-sm transition-all text-sm font-medium <?= hasLiked($post['id']) ? 'text-accent border-accent' : 'text-charcoal/70' ?>">
+                <i data-lucide="heart" class="w-5 h-5 <?= hasLiked($post['id']) ? 'fill-accent text-accent' : '' ?>" id="likeIcon"></i>
+                <span id="likeCount"><?= getLikeCount($post['id']) ?></span>
+                <span class="hidden sm:inline">Likes</span>
+            </button>
 
             <div class="flex items-center gap-1.5 text-sm font-medium text-charcoal/70">
                 <i data-lucide="message-square" class="w-4 h-4 text-charcoal/50"></i>
@@ -230,31 +221,42 @@ $readTime = max(1, ceil($wordCount / 200));
             <span class="text-xs text-charcoal/50 font-medium"><?= count(getComments($post['id'])) ?> thoughts</span>
         </div>
         
-        <?php if (is_logged_in()): ?>
-            <form id="commentForm" class="bg-white p-6 rounded-2xl border border-taupe shadow-sm space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-charcoal/60 mb-2">Leave a comment</label>
-                    <textarea name="content" 
-                              rows="3" 
-                              placeholder="Share your thoughts, feedback, or constructive critiques..."
-                              class="w-full p-4 border border-taupe rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 bg-cream/30 resize-none leading-relaxed"
-                              required></textarea>
+        <form id="commentForm" class="bg-white p-6 sm:p-8 rounded-2xl border border-taupe shadow-sm space-y-4">
+            <?php if (!is_logged_in()): ?>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-charcoal/60 mb-1.5">Your Name *</label>
+                        <input type="text" name="author_name" required placeholder="e.g. Alex" 
+                               value="<?= htmlspecialchars($_SESSION['guest_name'] ?? '') ?>"
+                               class="w-full px-3.5 py-2.5 border border-taupe rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 bg-cream/30">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-charcoal/60 mb-1.5">Email (optional)</label>
+                        <input type="email" name="author_email" placeholder="alex@example.com" 
+                               class="w-full px-3.5 py-2.5 border border-taupe rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 bg-cream/30">
+                    </div>
                 </div>
-                <div class="flex justify-end">
-                    <button type="submit" class="px-5 py-2 bg-dark text-white rounded-xl hover:bg-charcoal transition-all text-sm font-medium shadow-sm flex items-center gap-1.5">
-                        <i data-lucide="send" class="w-4 h-4"></i>
-                        <span>Post Comment</span>
-                    </button>
+            <?php else: ?>
+                <div class="flex items-center gap-2 text-xs text-charcoal/70 bg-cream/60 px-3.5 py-2 rounded-xl border border-taupe">
+                    <i data-lucide="user-check" class="w-4 h-4 text-accent"></i>
+                    <span>Commenting as author <strong><?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?></strong></span>
                 </div>
-            </form>
-        <?php else: ?>
-            <div class="p-6 bg-white rounded-2xl border border-taupe text-center">
-                <p class="text-sm text-charcoal/70">
-                    <a href="/Blog/login.php?return=<?= urlencode('/Blog/post.php?id=' . $post['id']) ?>" class="text-accent font-semibold hover:underline">Sign in</a> 
-                    to join the conversation and reply to this story.
-                </p>
+            <?php endif; ?>
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-charcoal/60 mb-1.5">Leave a comment</label>
+                <textarea name="content" 
+                          rows="3" 
+                          placeholder="Share your thoughts, questions, or perspectives..."
+                          class="w-full p-4 border border-taupe rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 bg-cream/30 resize-none leading-relaxed"
+                          required></textarea>
             </div>
-        <?php endif; ?>
+            <div class="flex justify-end">
+                <button type="submit" class="px-5 py-2.5 bg-dark text-white rounded-xl hover:bg-charcoal transition-all text-sm font-medium shadow-sm flex items-center gap-1.5">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    <span>Post Comment</span>
+                </button>
+            </div>
+        </form>
 
         <!-- Comments List -->
         <div id="comments" class="space-y-4">
@@ -413,6 +415,8 @@ document.getElementById('commentForm')?.addEventListener('submit', async (e) => 
     e.preventDefault();
     const content = e.target.content.value.trim();
     if (!content) return;
+    const author_name = e.target.author_name ? e.target.author_name.value.trim() : '';
+    const author_email = e.target.author_email ? e.target.author_email.value.trim() : '';
 
     try {
         const response = await fetch('/Blog/api/add_comment.php', {
@@ -420,7 +424,9 @@ document.getElementById('commentForm')?.addEventListener('submit', async (e) => 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 post_id: <?= (int)$post['id'] ?>,
-                content: content 
+                content: content,
+                author_name: author_name,
+                author_email: author_email
             })
         });
         const data = await response.json();
