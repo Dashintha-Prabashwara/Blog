@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/header.php';
+require_once __DIR__ . '/includes/header.php';
 
 if (!is_logged_in()) {
     header('Location: /Blog/login.php');
@@ -94,4 +94,4 @@ if (!$user) {
     </div>
 </div>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>

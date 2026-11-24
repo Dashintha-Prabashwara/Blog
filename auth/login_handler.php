@@ -1,7 +1,9 @@
 <?php
-session_start();
-require_once '../includes/db.php';
-require_once '../includes/functions.php';  // Add this line to include showPopup function
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $identifier = trim($_POST['identifier']);
@@ -16,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
-            showPopup('Successfully logged in!', 'success');
+            $_SESSION['success'] = 'Successfully logged in!';
             header('Location: ' . $return);
             exit;
         } else {

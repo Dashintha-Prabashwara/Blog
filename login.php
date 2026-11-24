@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/db.php';
+require_once __DIR__ . '/includes/db.php';
 
 // Check if already logged in
 if (isset($_SESSION['user_id'])) {
@@ -8,7 +8,7 @@ if (isset($_SESSION['user_id'])) {
 }
 
 $pageTitle = 'Sign in — Code & Canvas';
-require_once 'includes/header.php';
+require_once __DIR__ . '/includes/header.php';
 
 $storyCount = (int)$pdo->query("SELECT COUNT(*) FROM blogpost")->fetchColumn();
 $userCount = (int)$pdo->query("SELECT COUNT(*) FROM user")->fetchColumn();
@@ -127,4 +127,4 @@ function togglePasswordVisibility(inputId, btn) {
 }
 </script>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
